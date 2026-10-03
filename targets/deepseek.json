@@ -1,7 +1,11 @@
 {
+  "baseUrl": "https://api.deepseek.com",
+  "security": {
+    "type": "httpBearer"
+  },
   "operations": {
     "completions.create": {
-      "path": "/v1/chat/completions",
+      "path": "/chat/completions",
       "method": "POST",
       "return": {
         "code": 200,
@@ -31,8 +35,7 @@
       "description": "Creates a model response for the given chat conversation.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "completions.fim": {
       "path": "/beta/completions",
@@ -65,11 +68,43 @@
       "description": "Creates a Fill-In-the-Middle (FIM) code completion.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
+    },
+    "responses.create": {
+      "path": "/responses",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Response_Response"
+        }
+      },
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Request"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Creates a model response in the OpenAI Responses API format. The API is stateless, so the full conversation history must be sent on each request.",
+      "stability": 1,
+      "security": [],
+      "authorization": true
     },
     "models.list": {
-      "path": "/v1/models",
+      "path": "/models",
       "method": "GET",
       "return": {
         "code": 200,
@@ -90,8 +125,7 @@
       "description": "Lists the currently available models.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.get_balance": {
       "path": "/user/balance",
@@ -115,8 +149,151 @@
       "description": "Retrieves the current user account balance information.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
+    },
+    "files.upload": {
+      "path": "/files",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "File"
+        }
+      },
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "contentType": "multipart/form-data"
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Uploads an image file (JPEG, PNG, GIF or WebP, max 64 MiB) which can later be referenced by its file_id. Form fields: file, purpose (user_data) and optionally expires_after[anchor] (created_at) and expires_after[seconds] (3600-2592000).",
+      "stability": 1,
+      "security": [],
+      "authorization": true
+    },
+    "files.list": {
+      "path": "/files",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "File_Collection"
+        }
+      },
+      "arguments": {
+        "after": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "order": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "purpose": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a list of files that belong to the user, with cursor-based pagination.",
+      "stability": 1,
+      "security": [],
+      "authorization": true
+    },
+    "files.retrieve": {
+      "path": "/files/:file_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "File"
+        }
+      },
+      "arguments": {
+        "file_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns information about a specific file.",
+      "stability": 1,
+      "security": [],
+      "authorization": true
+    },
+    "files.delete": {
+      "path": "/files/:file_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "File_Deleted"
+        }
+      },
+      "arguments": {
+        "file_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Deletes a file.",
+      "stability": 1,
+      "security": [],
+      "authorization": true
     }
   },
   "definitions": {
@@ -131,10 +308,10 @@
         "message": {
           "description": "A chat completion message generated by the model.",
           "type": "reference",
-          "target": "Completion_Message"
+          "target": "Completion_Message_Assistant"
         },
         "finish_reason": {
-          "description": "The reason the model stopped generating tokens.",
+          "description": "The reason the model stopped generating tokens: stop, length, content_filter, tool_calls, insufficient_system_resource or aborted.",
           "type": "string"
         },
         "logprobs": {
@@ -150,6 +327,14 @@
       "properties": {
         "content": {
           "description": "A list of message content tokens with log probability information.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Token_Logprob"
+          }
+        },
+        "reasoning_content": {
+          "description": "A list of reasoning content tokens with log probability information.",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -216,10 +401,6 @@
         "role": {
           "description": "The role of the author of this message.",
           "type": "string"
-        },
-        "content": {
-          "description": "The contents of the message.",
-          "type": "string"
         }
       },
       "discriminator": "role",
@@ -238,12 +419,17 @@
         "target": "Completion_Message"
       },
       "properties": {
+        "content": {
+          "description": "The contents of the assistant message.",
+          "type": "string",
+          "nullable": true
+        },
         "name": {
           "description": "An optional name for the participant.",
           "type": "string"
         },
         "prefix": {
-          "description": "Set to true to force the model to continue the generation from the provided prefix.",
+          "description": "(Beta) Set to true to force the model to start its answer with the content of this assistant message. Requires the beta base URL.",
           "type": "boolean"
         },
         "reasoning_content": {
@@ -268,6 +454,10 @@
         "target": "Completion_Message"
       },
       "properties": {
+        "content": {
+          "description": "The contents of the system message.",
+          "type": "string"
+        },
         "name": {
           "description": "An optional name for the participant.",
           "type": "string"
@@ -282,6 +472,14 @@
         "target": "Completion_Message"
       },
       "properties": {
+        "content": {
+          "description": "The contents of the tool message as a list of content parts (text, image or file).",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Content_Part"
+          }
+        },
         "tool_call_id": {
           "description": "Tool call that this message is responding to.",
           "type": "string"
@@ -296,6 +494,14 @@
         "target": "Completion_Message"
       },
       "properties": {
+        "content": {
+          "description": "The contents of the user message as a list of content parts (text, image or file).",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Content_Part"
+          }
+        },
         "name": {
           "description": "An optional name for the participant.",
           "type": "string"
@@ -364,7 +570,11 @@
         },
         "parameters": {
           "description": "The parameters the function accepts, described as a JSON Schema object.",
-          "type": "map"
+          "type": "any"
+        },
+        "strict": {
+          "description": "(Beta) If true, the API uses strict mode so tool calls always comply with the JSON schema of the function.",
+          "type": "boolean"
         }
       }
     },
@@ -393,7 +603,7 @@
       "type": "struct",
       "properties": {
         "model": {
-          "description": "ID of the model to use (e.g., deepseek-chat, deepseek-reasoner).",
+          "description": "ID of the model to use (e.g., deepseek-flash, deepseek-v4-pro).",
           "type": "string"
         },
         "messages": {
@@ -404,9 +614,10 @@
             "target": "Completion_Message"
           }
         },
-        "frequency_penalty": {
-          "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far.",
-          "type": "number"
+        "thinking": {
+          "description": "Controls the switch between thinking and non-thinking mode.",
+          "type": "reference",
+          "target": "Completion_Thinking"
         },
         "max_tokens": {
           "description": "The maximum number of tokens that can be generated in the chat completion.",
@@ -415,10 +626,6 @@
         "logprobs": {
           "description": "Whether to return log probabilities of the output tokens or not.",
           "type": "boolean"
-        },
-        "presence_penalty": {
-          "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far.",
-          "type": "number"
         },
         "response_format": {
           "description": "An object specifying the format that the model must output.",
@@ -453,6 +660,10 @@
             "target": "Completion_Tool"
           }
         },
+        "tool_choice": {
+          "description": "Controls which (if any) tool is called by the model. Either the string none, auto or required, or a Completion_Tool_Choice object.",
+          "type": "any"
+        },
         "top_logprobs": {
           "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position.",
           "type": "integer"
@@ -460,6 +671,10 @@
         "top_p": {
           "description": "Nucleus sampling probability mass (between 0 and 1).",
           "type": "number"
+        },
+        "user_id": {
+          "description": "A custom end-user identifier ([a-zA-Z0-9-_], max 512 chars), used for content safety review, KVCache isolation and scheduling isolation.",
+          "type": "string"
         }
       }
     },
@@ -486,6 +701,16 @@
         "total_tokens": {
           "description": "Total number of tokens used in the request (prompt + completion).",
           "type": "integer"
+        },
+        "prompt_tokens_details": {
+          "description": "Breakdown of tokens used in the prompt.",
+          "type": "reference",
+          "target": "Completion_Usage_Prompt_Details"
+        },
+        "completion_tokens_details": {
+          "description": "Breakdown of tokens used in the completion.",
+          "type": "reference",
+          "target": "Completion_Usage_Completion_Details"
         }
       }
     },
@@ -533,7 +758,7 @@
       "type": "struct",
       "properties": {
         "model": {
-          "description": "ID of the model to use (e.g. deepseek-chat).",
+          "description": "ID of the model to use (e.g. deepseek-flash, deepseek-v4-pro).",
           "type": "string"
         },
         "prompt": {
@@ -570,6 +795,15 @@
         "stream": {
           "description": "Whether to stream back partial progress via SSE.",
           "type": "boolean"
+        },
+        "logprobs": {
+          "description": "Include the log probabilities on the most likely output tokens (max 20).",
+          "type": "integer"
+        },
+        "stream_options": {
+          "description": "Options for streaming responses.",
+          "type": "reference",
+          "target": "Completion_Stream_Options"
         }
       }
     },
@@ -592,7 +826,7 @@
         "logprobs": {
           "description": "Logprobs info if requested.",
           "type": "reference",
-          "target": "Completion_Choice_Logprobs"
+          "target": "Fim_Completion_Logprobs"
         }
       }
     },
@@ -650,6 +884,42 @@
         "owned_by": {
           "description": "Organization owning the model.",
           "type": "string"
+        },
+        "name": {
+          "description": "The display name of the model.",
+          "type": "string"
+        },
+        "context_window": {
+          "description": "The total token capacity of the context window, counting both input and output tokens.",
+          "type": "integer"
+        },
+        "max_output_tokens": {
+          "description": "The maximum number of output tokens allowed in a single response.",
+          "type": "integer"
+        },
+        "input_modalities": {
+          "description": "The input types the model accepts (text, image).",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "output_modalities": {
+          "description": "The media types the model can generate.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "effort": {
+          "description": "The effort levels available when thinking mode is enabled.",
+          "type": "reference",
+          "target": "Model_Effort"
+        },
+        "api_capabilities": {
+          "description": "Model behavior declared per API protocol.",
+          "type": "reference",
+          "target": "Model_Api_Capabilities"
         }
       }
     },
@@ -716,7 +986,7 @@
       "type": "struct",
       "properties": {
         "error": {
-          "description": "",
+          "description": "The error details.",
           "type": "reference",
           "target": "Error_Detail"
         }
@@ -741,6 +1011,804 @@
         "param": {
           "description": "Invalid parameter string if applicable.",
           "type": "string"
+        }
+      }
+    },
+    "Completion_Content_Part": {
+      "description": "A content part of a user or tool message.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "The type discriminator.",
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Completion_Content_Part_Text": "text",
+        "Completion_Content_Part_Image": "image_url",
+        "Completion_Content_Part_File": "file"
+      }
+    },
+    "Completion_Content_Part_Text": {
+      "description": "Text content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Content_Part"
+      },
+      "properties": {
+        "text": {
+          "description": "The text content.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Content_Part_Image": {
+      "description": "Image content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Content_Part"
+      },
+      "properties": {
+        "image_url": {
+          "description": "The image to include.",
+          "type": "reference",
+          "target": "Completion_Content_Part_Image_Url"
+        }
+      }
+    },
+    "Completion_Content_Part_Image_Url": {
+      "description": "Image source details.",
+      "type": "struct",
+      "properties": {
+        "url": {
+          "description": "Either an http(s) URL of the image or a base64-encoded data URL (JPEG, PNG, GIF or WebP).",
+          "type": "string"
+        },
+        "detail": {
+          "description": "Controls how the image is processed: low, high, original or auto.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Content_Part_File": {
+      "description": "File content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Content_Part"
+      },
+      "properties": {
+        "file_id": {
+          "description": "The ID of a file uploaded via the Files API. Mutually exclusive with file_data.",
+          "type": "string"
+        },
+        "file_data": {
+          "description": "A base64-encoded data URL of the image. Mutually exclusive with file_id.",
+          "type": "string"
+        },
+        "filename": {
+          "description": "An optional filename. Only valid together with file_data.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Tool_Choice": {
+      "description": "Forces the model to call a specific function.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "The type of the tool. Always 'function'.",
+          "type": "string"
+        },
+        "function": {
+          "description": "The function to call.",
+          "type": "reference",
+          "target": "Completion_Tool_Choice_Function"
+        }
+      }
+    },
+    "Completion_Tool_Choice_Function": {
+      "description": "The function to call.",
+      "type": "struct",
+      "properties": {
+        "name": {
+          "description": "The name of the function to call.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Thinking": {
+      "description": "Controls the switch between thinking and non-thinking mode.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "Either 'enabled' (default) or 'disabled'.",
+          "type": "string"
+        },
+        "reasoning_effort": {
+          "description": "The thinking effort: none, low, high or max. 'none' disables thinking mode.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Usage_Prompt_Details": {
+      "description": "Breakdown of tokens used in the prompt.",
+      "type": "struct",
+      "properties": {
+        "cached_tokens": {
+          "description": "Number of tokens in the prompt that hit the context cache.",
+          "type": "integer"
+        }
+      }
+    },
+    "Completion_Usage_Completion_Details": {
+      "description": "Breakdown of tokens used in the completion.",
+      "type": "struct",
+      "properties": {
+        "reasoning_tokens": {
+          "description": "Tokens generated by the model for reasoning.",
+          "type": "integer"
+        }
+      }
+    },
+    "Fim_Completion_Logprobs": {
+      "description": "Log probability information for a FIM completion choice.",
+      "type": "struct",
+      "properties": {
+        "text_offset": {
+          "description": "Character offsets of the tokens in the text.",
+          "type": "array",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "token_logprobs": {
+          "description": "The log probability of each token.",
+          "type": "array",
+          "schema": {
+            "type": "number"
+          }
+        },
+        "tokens": {
+          "description": "The generated tokens.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "top_logprobs": {
+          "description": "The most likely tokens and their log probability at each position.",
+          "type": "array",
+          "schema": {
+            "type": "map",
+            "schema": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "Model_Effort": {
+      "description": "The effort levels available when thinking mode is enabled.",
+      "type": "struct",
+      "properties": {
+        "supported_levels": {
+          "description": "The effort levels the model supports when thinking mode is enabled.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "default_level": {
+          "description": "The effort level used when the request does not specify one.",
+          "type": "string"
+        }
+      }
+    },
+    "Model_Api_Capabilities": {
+      "description": "Model behavior declared per API protocol.",
+      "type": "struct",
+      "properties": {
+        "anthropic_messages": {
+          "description": "Capabilities that apply when the model is used through the Anthropic Messages API.",
+          "type": "reference",
+          "target": "Model_Api_Capabilities_Anthropic"
+        }
+      }
+    },
+    "Model_Api_Capabilities_Anthropic": {
+      "description": "Capabilities for the Anthropic Messages API.",
+      "type": "struct",
+      "properties": {
+        "system_prompt_update": {
+          "description": "How the model picks up an updated system prompt: leading-only or in-history.",
+          "type": "string"
+        }
+      }
+    },
+    "File": {
+      "description": "An uploaded file object.",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "The file identifier, of the form file-api-...",
+          "type": "string"
+        },
+        "object": {
+          "description": "The object type, which is always 'file'.",
+          "type": "string"
+        },
+        "bytes": {
+          "description": "The size of the file in bytes.",
+          "type": "integer"
+        },
+        "created_at": {
+          "description": "The Unix timestamp (in seconds) of when the file was created.",
+          "type": "integer"
+        },
+        "filename": {
+          "description": "The name of the file.",
+          "type": "string"
+        },
+        "purpose": {
+          "description": "The intended purpose of the file, always 'user_data'.",
+          "type": "string"
+        },
+        "expires_at": {
+          "description": "The Unix timestamp (in seconds) of when the file expires. Only present when an expiration was set at upload time.",
+          "type": "integer"
+        }
+      }
+    },
+    "File_Collection": {
+      "description": "A paginated list of files.",
+      "type": "struct",
+      "properties": {
+        "object": {
+          "description": "The object type, which is always 'list'.",
+          "type": "string"
+        },
+        "data": {
+          "description": "The list of file objects.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "File"
+          }
+        },
+        "first_id": {
+          "description": "The ID of the first file in the list.",
+          "type": "string"
+        },
+        "last_id": {
+          "description": "The ID of the last file in the list.",
+          "type": "string"
+        },
+        "has_more": {
+          "description": "Whether there are more files beyond this page.",
+          "type": "boolean"
+        }
+      }
+    },
+    "File_Deleted": {
+      "description": "File deletion status.",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "The ID of the deleted file.",
+          "type": "string"
+        },
+        "object": {
+          "description": "The object type, which is always 'file'.",
+          "type": "string"
+        },
+        "deleted": {
+          "description": "Whether the file was successfully deleted.",
+          "type": "boolean"
+        }
+      }
+    },
+    "Response_Request": {
+      "description": "Request payload for the Responses API.",
+      "type": "struct",
+      "properties": {
+        "model": {
+          "description": "ID of the model to use (e.g., deepseek-flash, deepseek-v4-pro).",
+          "type": "string"
+        },
+        "input": {
+          "description": "A list of input items. At least one of input and instructions is required.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Input"
+          }
+        },
+        "instructions": {
+          "description": "A system-level instruction, inserted as the first system message of the model context.",
+          "type": "string"
+        },
+        "reasoning": {
+          "description": "Configuration of the thinking mode.",
+          "type": "reference",
+          "target": "Response_Reasoning"
+        },
+        "max_output_tokens": {
+          "description": "An upper bound for the number of tokens that can be generated, including visible output and reasoning tokens.",
+          "type": "integer"
+        },
+        "stream": {
+          "description": "If set, the response is streamed as semantic server-sent events.",
+          "type": "boolean"
+        },
+        "temperature": {
+          "description": "Sampling temperature between 0 and 2.",
+          "type": "number"
+        },
+        "top_p": {
+          "description": "Nucleus sampling probability mass (between 0 and 1).",
+          "type": "number"
+        },
+        "text": {
+          "description": "Configuration of the text output.",
+          "type": "reference",
+          "target": "Response_Text"
+        },
+        "tools": {
+          "description": "A list of tools the model may call.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Tool"
+          }
+        },
+        "tool_choice": {
+          "description": "Controls which (if any) tool is called by the model. Either the string none, auto or required, or a Response_Tool_Choice object.",
+          "type": "any"
+        },
+        "top_logprobs": {
+          "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position.",
+          "type": "integer"
+        },
+        "user": {
+          "description": "A custom end-user identifier ([a-zA-Z0-9-_], max 512 chars).",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Input": {
+      "description": "An input item for the Responses API.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "The type discriminator.",
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Input_Message": "message",
+        "Response_Input_FunctionCall": "function_call",
+        "Response_Input_FunctionCallOutput": "function_call_output",
+        "Response_Input_Reasoning": "reasoning"
+      }
+    },
+    "Response_Input_Message": {
+      "description": "A message input item.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Input"
+      },
+      "properties": {
+        "role": {
+          "description": "The role of the message author: user, assistant, system or developer.",
+          "type": "string"
+        },
+        "content": {
+          "description": "A list of input_text, output_text or input_image content parts.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Content_Part"
+          }
+        }
+      }
+    },
+    "Response_Input_FunctionCall": {
+      "description": "A function call input item.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Input"
+      },
+      "properties": {
+        "call_id": {
+          "description": "The ID pairing a function call with its output.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the function to call.",
+          "type": "string"
+        },
+        "arguments": {
+          "description": "The arguments to call the function with, in JSON format.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Input_FunctionCallOutput": {
+      "description": "A function call output input item.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Input"
+      },
+      "properties": {
+        "call_id": {
+          "description": "The ID pairing a function call with its output.",
+          "type": "string"
+        },
+        "output": {
+          "description": "The output of the tool call, either a plain string or a list of input_text / input_image content parts.",
+          "type": "any"
+        }
+      }
+    },
+    "Response_Input_Reasoning": {
+      "description": "A reasoning input item.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Input"
+      },
+      "properties": {
+        "content": {
+          "description": "A list of reasoning_text content parts.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Content_Part"
+          }
+        }
+      }
+    },
+    "Response_Content_Part": {
+      "description": "A content part of a Responses API input item.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "The type discriminator.",
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Content_Part_InputText": "input_text",
+        "Response_Content_Part_OutputText": "output_text",
+        "Response_Content_Part_InputImage": "input_image",
+        "Response_Content_Part_ReasoningText": "reasoning_text"
+      }
+    },
+    "Response_Content_Part_InputText": {
+      "description": "Input text content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Content_Part"
+      },
+      "properties": {
+        "text": {
+          "description": "The text content.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Content_Part_OutputText": {
+      "description": "Output text content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Content_Part"
+      },
+      "properties": {
+        "text": {
+          "description": "The text content.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Content_Part_InputImage": {
+      "description": "Input image content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Content_Part"
+      },
+      "properties": {
+        "image_url": {
+          "description": "An http(s) URL of the image or a base64-encoded data URL. Mutually exclusive with file_id.",
+          "type": "string"
+        },
+        "detail": {
+          "description": "Controls how the image is processed: low, high, original or auto.",
+          "type": "string"
+        },
+        "file_id": {
+          "description": "The ID of an image file uploaded via the Files API. Mutually exclusive with image_url.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Content_Part_ReasoningText": {
+      "description": "Reasoning text content part.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Content_Part"
+      },
+      "properties": {
+        "text": {
+          "description": "The chain-of-thought text content.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Reasoning": {
+      "description": "Configuration of the thinking mode.",
+      "type": "struct",
+      "properties": {
+        "effort": {
+          "description": "The thinking effort: none, low, high or max. 'none' disables thinking mode.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Text": {
+      "description": "Configuration of the text output.",
+      "type": "struct",
+      "properties": {
+        "format": {
+          "description": "The output format.",
+          "type": "reference",
+          "target": "Response_Text_Format"
+        }
+      }
+    },
+    "Response_Text_Format": {
+      "description": "The output format.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "One of text (default), json_object or json_schema.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the schema. Required when type is json_schema.",
+          "type": "string"
+        },
+        "schema": {
+          "description": "The JSON Schema that the output must conform to. Required when type is json_schema.",
+          "type": "any"
+        }
+      }
+    },
+    "Response_Tool": {
+      "description": "A tool the model may call.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "The type of the tool. Always 'function'.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the function.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of what the function does.",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "The parameters the function accepts, described as a JSON Schema object.",
+          "type": "any"
+        }
+      }
+    },
+    "Response_Tool_Choice": {
+      "description": "Forces the model to call a specific function.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "The type of the tool. Always 'function'.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the function to call.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Response": {
+      "description": "A model response of the Responses API.",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "A unique identifier for the response.",
+          "type": "string"
+        },
+        "object": {
+          "description": "The object type, which is always 'response'.",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "The Unix timestamp (in seconds) of when the response was created.",
+          "type": "integer"
+        },
+        "status": {
+          "description": "The status of the response: in_progress, completed, incomplete or failed.",
+          "type": "string"
+        },
+        "error": {
+          "description": "The error object when the response failed.",
+          "type": "reference",
+          "target": "Response_Error"
+        },
+        "incomplete_details": {
+          "description": "The details about why the response is incomplete.",
+          "type": "reference",
+          "target": "Response_Incomplete_Details"
+        },
+        "model": {
+          "description": "The model used for the response.",
+          "type": "string"
+        },
+        "output": {
+          "description": "The list of output items generated by the model.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Output"
+          }
+        },
+        "usage": {
+          "description": "Token usage statistics for the response.",
+          "type": "reference",
+          "target": "Response_Usage"
+        }
+      }
+    },
+    "Response_Error": {
+      "description": "The error object of a failed response.",
+      "type": "struct",
+      "properties": {
+        "code": {
+          "description": "The error code.",
+          "type": "string"
+        },
+        "message": {
+          "description": "The error message.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Incomplete_Details": {
+      "description": "The details about why the response is incomplete.",
+      "type": "struct",
+      "properties": {
+        "reason": {
+          "description": "Either max_output_tokens or content_filter.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Output": {
+      "description": "An output item generated by the model.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "The type of the output item: message, reasoning or function_call.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique ID of the output item.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the output item: in_progress, completed or incomplete.",
+          "type": "string"
+        },
+        "role": {
+          "description": "For message items. Always 'assistant'.",
+          "type": "string"
+        },
+        "content": {
+          "description": "For message items a list of output_text parts, for reasoning items a list of reasoning_text parts.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Output_Content"
+          }
+        },
+        "call_id": {
+          "description": "For function_call items. An identifier used when passing the function output back to the API.",
+          "type": "string"
+        },
+        "name": {
+          "description": "For function_call items. The name of the function to call.",
+          "type": "string"
+        },
+        "arguments": {
+          "description": "For function_call items. The arguments to call the function with, in JSON format.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Output_Content": {
+      "description": "A content part of an output item.",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "Either output_text or reasoning_text.",
+          "type": "string"
+        },
+        "text": {
+          "description": "The text content.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Usage": {
+      "description": "Token usage statistics for the response.",
+      "type": "struct",
+      "properties": {
+        "input_tokens": {
+          "description": "Number of input tokens.",
+          "type": "integer"
+        },
+        "input_tokens_details": {
+          "description": "Breakdown of the input tokens.",
+          "type": "reference",
+          "target": "Response_Usage_Input_Details"
+        },
+        "output_tokens": {
+          "description": "Number of output tokens.",
+          "type": "integer"
+        },
+        "output_tokens_details": {
+          "description": "Breakdown of the output tokens.",
+          "type": "reference",
+          "target": "Response_Usage_Output_Details"
+        },
+        "total_tokens": {
+          "description": "Total number of tokens used in the request (input + output).",
+          "type": "integer"
+        }
+      }
+    },
+    "Response_Usage_Input_Details": {
+      "description": "Breakdown of the input tokens.",
+      "type": "struct",
+      "properties": {
+        "cached_tokens": {
+          "description": "Number of input tokens that hit the context cache.",
+          "type": "integer"
+        }
+      }
+    },
+    "Response_Usage_Output_Details": {
+      "description": "Breakdown of the output tokens.",
+      "type": "struct",
+      "properties": {
+        "reasoning_tokens": {
+          "description": "Number of reasoning tokens generated by the model.",
+          "type": "integer"
         }
       }
     }
