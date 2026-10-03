@@ -1,67 +1,5158 @@
 {
-  "baseUrl": "https://api.notion.com",
-  "security": {
-    "type": "httpBearer"
-  },
-  "operations": {
-    "user.getAll": {
-      "path": "/v1/users",
-      "method": "GET",
-      "return": {
-        "code": 200,
-        "schema": {
-          "type": "reference",
-          "target": "User_Collection"
+  "baseUrl": "https://api.notion.com/v1",
+  "definitions": {
+    "Agent_Parent_Id": {
+      "description": "Parent is an agent.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "agent_id": {
+          "description": "The ID of the parent agent.",
+          "type": "string"
         }
       },
+      "type": "struct"
+    },
+    "Append_Block_Children_Request": {
+      "description": "Request body to append child blocks.",
+      "properties": {
+        "children": {
+          "description": "Child blocks to append (max 100).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "position": {
+          "description": "Where to insert the blocks. Defaults to the end.",
+          "target": "Content_Position",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Async_Task": {
+      "description": "Status and result of an asynchronous background task, e.g. a markdown page creation/update started with `allow_async: true`.",
+      "properties": {
+        "created_time": {
+          "description": "When the task was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error details. Only present when status is `failed`.",
+          "target": "Error",
+          "type": "reference"
+        },
+        "id": {
+          "description": "The ID of the async task.",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `async_task`.",
+          "type": "string"
+        },
+        "operation": {
+          "description": "The operation this task executes.",
+          "target": "Async_Task_Operation",
+          "type": "reference"
+        },
+        "poll_after_seconds": {
+          "description": "Suggested seconds to wait before polling again. Only present while queued, running or retrying.",
+          "type": "integer"
+        },
+        "result": {
+          "description": "JSON result of the operation. Only present when status is `succeeded`.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "status": {
+          "description": "`queued`, `running`, `retrying`, `succeeded` or `failed`.",
+          "type": "string"
+        },
+        "status_url": {
+          "description": "URL to poll for the task status.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Async_Task_Operation": {
+      "description": "The operation an async task executes.",
+      "properties": {
+        "name": {
+          "description": "Operation name, e.g. `POST /v1/pages` or `PATCH /v1/pages/:page_id/markdown`.",
+          "type": "string"
+        },
+        "surface": {
+          "description": "Surface that initiated the task: `rest` or `mcp`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Block": {
+      "base": true,
+      "description": "A block object represents a piece of content within Notion.",
+      "discriminator": "type",
+      "mapping": {
+        "Block_Audio": "audio",
+        "Block_Bookmark": "bookmark",
+        "Block_Breadcrumb": "breadcrumb",
+        "Block_Bulleted_List_Item": "bulleted_list_item",
+        "Block_Callout": "callout",
+        "Block_Child_Database": "child_database",
+        "Block_Child_Page": "child_page",
+        "Block_Code": "code",
+        "Block_Column": "column",
+        "Block_Column_List": "column_list",
+        "Block_Divider": "divider",
+        "Block_Embed": "embed",
+        "Block_Equation": "equation",
+        "Block_File": "file",
+        "Block_Heading_Four": "heading_4",
+        "Block_Heading_One": "heading_1",
+        "Block_Heading_Three": "heading_3",
+        "Block_Heading_Two": "heading_2",
+        "Block_Image": "image",
+        "Block_Link_Preview": "link_preview",
+        "Block_Link_To_Page": "link_to_page",
+        "Block_Meeting_Notes": "meeting_notes",
+        "Block_Numbered_List_Item": "numbered_list_item",
+        "Block_PDF": "pdf",
+        "Block_Paragraph": "paragraph",
+        "Block_Quote": "quote",
+        "Block_Synced_Block": "synced_block",
+        "Block_Tab": "tab",
+        "Block_Table": "table",
+        "Block_Table_Of_Contents": "table_of_contents",
+        "Block_Table_Row": "table_row",
+        "Block_Template": "template",
+        "Block_To_Do": "to_do",
+        "Block_Toggle": "toggle",
+        "Block_Unsupported": "unsupported",
+        "Block_Video": "video"
+      },
+      "properties": {
+        "created_by": {
+          "description": "User who created the block.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "Date and time when this block was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "has_children": {
+          "description": "Whether or not the block has children blocks nested within it.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Identifier for the block.",
+          "type": "string"
+        },
+        "in_trash": {
+          "description": "Whether the block is in the trash.",
+          "type": "boolean"
+        },
+        "last_edited_by": {
+          "description": "User who last edited the block.",
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "Date and time when this block was last updated.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always block.",
+          "type": "string"
+        },
+        "parent": {
+          "description": "Information about the block's parent.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "type": {
+          "description": "Type of block.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Audio": {
+      "description": "Audio block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "audio": {
+          "description": "Audio content.",
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Bookmark": {
+      "description": "Bookmark block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "bookmark": {
+          "target": "Bookmark",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Breadcrumb": {
+      "description": "Breadcrumb block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "breadcrumb": {
+          "description": "Always an empty object.",
+          "target": "Empty_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Bulleted_List_Item": {
+      "description": "Bulleted list item block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "bulleted_list_item": {
+          "target": "Bulleted_List_Item",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Callout": {
+      "description": "Callout block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "callout": {
+          "target": "Callout",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Child_Database": {
+      "description": "Child database block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "child_database": {
+          "target": "Child_Database",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Child_Page": {
+      "description": "Child page block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "child_page": {
+          "target": "Child_Page",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Code": {
+      "description": "Code block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "code": {
+          "target": "Code",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Collection": {
+      "description": "Paginated list of blocks.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page of results.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always list.",
+          "type": "string"
+        },
+        "results": {
+          "description": "List of block objects.",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always block.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Column": {
+      "description": "Column block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "column": {
+          "description": "Column content.",
+          "target": "Column",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Column_List": {
+      "description": "Column list block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "column_list": {
+          "description": "Column list content.",
+          "target": "Column_List",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Divider": {
+      "description": "Divider block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "divider": {
+          "description": "Always an empty object.",
+          "target": "Empty_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Embed": {
+      "description": "Embed block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "embed": {
+          "description": "Embed block content.",
+          "target": "Embed",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Equation": {
+      "description": "Equation block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "equation": {
+          "target": "Equation",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_File": {
+      "description": "File block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "file": {
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Heading_Four": {
+      "description": "Heading 4 block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "heading_4": {
+          "description": "Heading 4 content.",
+          "target": "Heading",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Heading_One": {
+      "description": "Heading 1 block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "heading_1": {
+          "target": "Heading",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Heading_Three": {
+      "description": "Heading 3 block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "heading_3": {
+          "target": "Heading",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Heading_Two": {
+      "description": "Heading 2 block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "heading_2": {
+          "target": "Heading",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Image": {
+      "description": "Image block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "image": {
+          "description": "Image block content.",
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Link_Preview": {
+      "description": "Link preview block (read-only).",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "link_preview": {
+          "target": "Link_Preview",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Link_To_Page": {
+      "description": "Link to page block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "link_to_page": {
+          "description": "Link target.",
+          "target": "Link_To_Page",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Meeting_Notes": {
+      "description": "Meeting notes block (formerly transcription).",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "meeting_notes": {
+          "description": "Meeting notes content.",
+          "target": "Meeting_Notes",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Numbered_List_Item": {
+      "description": "Numbered list item block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "numbered_list_item": {
+          "target": "Numbered_List_Item",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_PDF": {
+      "description": "PDF block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "pdf": {
+          "description": "PDF block content.",
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Paragraph": {
+      "description": "Paragraph block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "paragraph": {
+          "target": "Paragraph",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Parent_Id": {
+      "description": "Parent is a block.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "block_id": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Quote": {
+      "description": "Quote block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "quote": {
+          "target": "Quote",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Synced_Block": {
+      "description": "Synced block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "synced_block": {
+          "description": "Synced block content.",
+          "target": "Synced_Block",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Tab": {
+      "description": "Tab block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "tab": {
+          "description": "Always an empty object.",
+          "target": "Empty_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Table": {
+      "description": "Table block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "table": {
+          "description": "Table content.",
+          "target": "Table",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Table_Of_Contents": {
+      "description": "Table of contents block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "table_of_contents": {
+          "description": "Table of contents content.",
+          "target": "Table_Of_Contents",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Table_Row": {
+      "description": "Table row block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "table_row": {
+          "description": "Table row content.",
+          "target": "Table_Row",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Template": {
+      "description": "Template block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "template": {
+          "description": "Template content.",
+          "target": "Template",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_To_Do": {
+      "description": "To-do block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "to_do": {
+          "description": "To-do content.",
+          "target": "To_Do",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Toggle": {
+      "description": "Toggle block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "toggle": {
+          "description": "Toggle content.",
+          "target": "Toggle",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Unsupported": {
+      "description": "Block type not supported by the API.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "unsupported": {
+          "description": "Unsupported block details.",
+          "target": "Unsupported",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Block_Video": {
+      "description": "Video block.",
+      "parent": {
+        "target": "Block",
+        "type": "reference"
+      },
+      "properties": {
+        "video": {
+          "description": "Video content.",
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Bookmark": {
+      "description": "Content of a bookmark block.",
+      "properties": {
+        "caption": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Bulleted_List_Item": {
+      "description": "Content of a bulleted list item block.",
+      "properties": {
+        "children": {
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "type": "string"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Callout": {
+      "description": "Content of a callout block.",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "icon": {
+          "target": "Icon",
+          "type": "reference"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Child_Database": {
+      "description": "Content of a child database block.",
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Child_Page": {
+      "description": "Content of a child page block.",
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Code": {
+      "description": "Content of a code block.",
+      "properties": {
+        "caption": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "language": {
+          "type": "string"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Column": {
+      "description": "Content of a column block.",
+      "properties": {
+        "children": {
+          "description": "Blocks inside the column (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "width_ratio": {
+          "description": "Ratio between 0 and 1 of the width of this column relative to all columns in the list.",
+          "type": "number"
+        }
+      },
+      "type": "struct"
+    },
+    "Column_List": {
+      "description": "Content of a column list block.",
+      "properties": {
+        "children": {
+          "description": "Column blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment": {
+      "description": "A comment on a Notion page or block.",
+      "properties": {
+        "attachments": {
+          "description": "File attachments of the comment.",
+          "schema": {
+            "target": "Comment_Attachment",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "created_by": {
+          "description": "The user who created the comment.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "When the comment was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "discussion_id": {
+          "description": "The ID of the discussion thread this comment belongs to.",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The display name of the comment.",
+          "target": "Comment_Display_Name",
+          "type": "reference"
+        },
+        "has_pending_attachments": {
+          "description": "Whether any file attachments are still uploading.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The ID of the comment.",
+          "type": "string"
+        },
+        "last_edited_time": {
+          "description": "When the comment was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `comment`.",
+          "type": "string"
+        },
+        "original_content_deleted": {
+          "description": "Whether this comment's original content was deleted.",
+          "type": "boolean"
+        },
+        "parent": {
+          "description": "The parent page or block of the comment.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "rich_text": {
+          "description": "The rich text content of the comment.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment_Attachment": {
+      "description": "A file attached to a comment.",
+      "properties": {
+        "category": {
+          "description": "`audio`, `image`, `pdf`, `productivity` or `video`.",
+          "type": "string"
+        },
+        "file": {
+          "description": "The Notion-hosted file.",
+          "target": "File_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment_Attachment_Request": {
+      "description": "A file upload to attach to a new comment.",
+      "properties": {
+        "file_upload_id": {
+          "description": "ID of a File Upload object with status `uploaded`.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Always `file_upload`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment_Collection": {
+      "description": "Paginated list of comments.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "List of comments.",
+          "schema": {
+            "target": "Comment",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `comment`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment_Display_Name": {
+      "description": "The author name shown for a comment.",
+      "properties": {
+        "custom": {
+          "description": "Custom name, when type is `custom` (request only).",
+          "target": "Comment_Display_Name_Custom",
+          "type": "reference"
+        },
+        "resolved_name": {
+          "description": "The resolved display name (response only).",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "`integration`, `user` or `custom`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Comment_Display_Name_Custom": {
+      "description": "Custom display name for a comment.",
+      "properties": {
+        "name": {
+          "description": "The custom display name to use.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Content_Position": {
+      "description": "Where to insert new content.",
+      "properties": {
+        "after_block": {
+          "description": "The block to insert after, when type is `after_block`.",
+          "target": "Id_Reference",
+          "type": "reference"
+        },
+        "type": {
+          "description": "For append block children: `after_block`, `start` or `end` (default). For page creation: `after_block`, `page_start` or `page_end`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Cover": {
+      "description": "Cover image of a page, database or data source.",
+      "properties": {
+        "external": {
+          "description": "External URL, when type is external.",
+          "target": "External_Object",
+          "type": "reference"
+        },
+        "file": {
+          "description": "Notion-hosted file, when type is file.",
+          "target": "File_Object",
+          "type": "reference"
+        },
+        "file_upload": {
+          "description": "File upload, when type is file_upload.",
+          "target": "Id_Reference",
+          "type": "reference"
+        },
+        "type": {
+          "description": "Type of cover: file, external or file_upload (request only).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_Comment_Request": {
+      "description": "Request body to create a comment on a page, block or existing discussion. Provide either `parent` or `discussion_id`, and either `rich_text` or `markdown`.",
+      "properties": {
+        "attachments": {
+          "description": "Files to attach (max 3).",
+          "schema": {
+            "target": "Comment_Attachment_Request",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "discussion_id": {
+          "description": "ID of an existing discussion thread to reply to.",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "Display name for the comment.",
+          "target": "Comment_Display_Name",
+          "type": "reference"
+        },
+        "markdown": {
+          "description": "Content as Markdown (inline formatting only).",
+          "type": "string"
+        },
+        "parent": {
+          "description": "The parent page or block.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "rich_text": {
+          "description": "Content of the comment.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_Data_Source_Request": {
+      "description": "Request body to create a data source in an existing database.",
+      "properties": {
+        "icon": {
+          "description": "Data source icon.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "parent": {
+          "description": "The parent database (`type: database_id`).",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "properties": {
+          "description": "Property schema of the data source.",
+          "schema": {
+            "target": "Data_Source_Property",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "title": {
+          "description": "Title of the data source.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_Database_Request": {
+      "description": "Request body to create a database and its initial data source.",
+      "properties": {
+        "cover": {
+          "description": "The cover of the database.",
+          "target": "Cover",
+          "type": "reference"
+        },
+        "database_type": {
+          "description": "Create a typed database: `tasks`, `projects` or `skills`. Cannot be combined with initial_data_source.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the database.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "icon": {
+          "description": "The icon of the database.",
+          "target": "Icon",
+          "type": "reference"
+        },
+        "initial_data_source": {
+          "description": "Initial data source configuration.",
+          "target": "Initial_Data_Source",
+          "type": "reference"
+        },
+        "is_inline": {
+          "description": "Whether the database is displayed inline in the parent page. Defaults to false.",
+          "type": "boolean"
+        },
+        "parent": {
+          "description": "The parent page or workspace.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "title": {
+          "description": "The title of the database.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_File_Upload_Request": {
+      "description": "Request body to start a file upload.",
+      "properties": {
+        "content_type": {
+          "description": "The MIME type of the file.",
+          "type": "string"
+        },
+        "external_url": {
+          "description": "Public HTTPS URL to import. Required for external_url.",
+          "type": "string"
+        },
+        "filename": {
+          "description": "The filename. Required for multi_part and external_url.",
+          "type": "string"
+        },
+        "mode": {
+          "description": "`single_part` (default), `multi_part` (files over 20 MiB) or `external_url`.",
+          "type": "string"
+        },
+        "number_of_parts": {
+          "description": "Number of parts. Required for multi_part (1-10000).",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_Page_Request": {
+      "description": "Request body to create a page.",
+      "properties": {
+        "allow_async": {
+          "description": "Set to true to receive an async_task response for markdown page creation.",
+          "type": "boolean"
+        },
+        "children": {
+          "description": "Page content as blocks (max 100).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "cover": {
+          "description": "Page cover.",
+          "nullable": true,
+          "target": "Cover",
+          "type": "reference"
+        },
+        "icon": {
+          "description": "Page icon.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "markdown": {
+          "description": "Page content as Notion-flavored Markdown. Mutually exclusive with children.",
+          "type": "string"
+        },
+        "parent": {
+          "description": "The parent page, data source, database or workspace.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "position": {
+          "description": "Where to place the page in the parent page.",
+          "target": "Content_Position",
+          "type": "reference"
+        },
+        "properties": {
+          "description": "Property values. Keys are property names or IDs. A page under a page only supports `title`.",
+          "schema": {
+            "target": "Page_Property_Value",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "template": {
+          "description": "Template to apply.",
+          "target": "Page_Template",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_View_Query_Request": {
+      "description": "Request body to execute a view's query.",
+      "properties": {
+        "page_size": {
+          "description": "Number of results per page (max 100).",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "Create_View_Request": {
+      "description": "Request body to create a view in a database or a widget in a dashboard.",
+      "properties": {
+        "configuration": {
+          "description": "View presentation configuration. `type` must match the view type.",
+          "type": "any"
+        },
+        "create_database": {
+          "description": "Create a new linked database block on a page (`parent` page_id, optional `position`).",
+          "type": "any"
+        },
+        "data_source_id": {
+          "description": "The data source the view is scoped to.",
+          "type": "string"
+        },
+        "database_id": {
+          "description": "Database to create the view in. Mutually exclusive with view_id and create_database.",
+          "type": "string"
+        },
+        "filter": {
+          "description": "Filter (same format as a data source query filter).",
+          "type": "any"
+        },
+        "name": {
+          "description": "The name of the view.",
+          "type": "string"
+        },
+        "placement": {
+          "description": "Placement in a dashboard.",
+          "target": "Widget_Placement",
+          "type": "reference"
+        },
+        "position": {
+          "description": "Placement in the view tab bar.",
+          "target": "View_Position",
+          "type": "reference"
+        },
+        "quick_filters": {
+          "description": "Quick filters keyed by property name or ID.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "sorts": {
+          "description": "Sorts to apply.",
+          "schema": {
+            "target": "Sort",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "`table`, `board`, `list`, `calendar`, `timeline`, `gallery`, `form`, `chart`, `map` or `dashboard`.",
+          "type": "string"
+        },
+        "view_id": {
+          "description": "Dashboard view to add this view to as a widget.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Custom_Emoji": {
+      "description": "A custom emoji in the workspace.",
+      "properties": {
+        "id": {
+          "description": "The ID of the custom emoji.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the custom emoji.",
+          "type": "string"
+        },
+        "url": {
+          "description": "The URL of the custom emoji image.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Custom_Emoji_Collection": {
+      "description": "Paginated list of custom emojis in the workspace.",
+      "properties": {
+        "has_more": {
+          "description": "Whether there are more results available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page of results, or null if there are no more results.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "results": {
+          "description": "The list of custom emojis.",
+          "schema": {
+            "target": "Custom_Emoji",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `custom_emoji`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Custom_Emoji_Icon": {
+      "description": "Icon using a workspace custom emoji.",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "custom_emoji": {
+          "description": "The custom emoji details.",
+          "target": "Custom_Emoji",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source": {
+      "description": "A data source (table) inside a database. It holds the property schema and the pages.",
+      "parent": {
+        "target": "Page_Or_Data_Source",
+        "type": "reference"
+      },
+      "properties": {
+        "cover": {
+          "description": "The cover of the data source.",
+          "nullable": true,
+          "target": "Cover",
+          "type": "reference"
+        },
+        "created_by": {
+          "description": "The user who created the data source.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "When the data source was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "database_parent": {
+          "description": "The parent of the data source's containing database.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "database_type": {
+          "description": "Typed database kind (`tasks`, `projects`, `sprints`, `docs`, `wiki`, `meetings`, `meeting_notes`, `skills`, `github_prs`), or null for a regular data source.",
+          "nullable": true,
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the data source.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "icon": {
+          "description": "The icon of the data source.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Whether the data source is in the trash.",
+          "type": "boolean"
+        },
+        "is_inline": {
+          "description": "Whether the data source is inline.",
+          "type": "boolean"
+        },
+        "last_edited_by": {
+          "description": "The user who last edited the data source.",
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "When the data source was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "parent": {
+          "description": "The parent of the data source (its database).",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "properties": {
+          "description": "The property schema of the data source.",
+          "schema": {
+            "target": "Data_Source_Property",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "public_url": {
+          "description": "The public URL of the data source, if publicly accessible.",
+          "nullable": true,
+          "type": "string"
+        },
+        "title": {
+          "description": "The title of the data source.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "url": {
+          "description": "The URL of the data source.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source_Parent_Id": {
+      "description": "Parent is a data source.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "data_source_id": {
+          "description": "The ID of the parent data source.",
+          "type": "string"
+        },
+        "database_id": {
+          "description": "The ID of the data source's parent database.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source_Property": {
+      "description": "A property definition in a data source schema. `type` names the key that holds the type-specific configuration.",
+      "properties": {
+        "checkbox": {
+          "description": "Configuration for `checkbox` properties.",
+          "type": "any"
+        },
+        "created_by": {
+          "description": "Configuration for `created_by` properties.",
+          "type": "any"
+        },
+        "created_time": {
+          "description": "Configuration for `created_time` properties.",
+          "type": "any"
+        },
+        "date": {
+          "description": "Configuration for `date` properties.",
+          "type": "any"
+        },
+        "description": {
+          "description": "The description of the property (max 280 characters).",
+          "nullable": true,
+          "type": "string"
+        },
+        "email": {
+          "description": "Configuration for `email` properties.",
+          "type": "any"
+        },
+        "files": {
+          "description": "Configuration for `files` properties.",
+          "type": "any"
+        },
+        "formula": {
+          "description": "Configuration for `formula` properties.",
+          "type": "any"
+        },
+        "id": {
+          "description": "The ID of the property.",
+          "type": "string"
+        },
+        "last_edited_by": {
+          "description": "Configuration for `last_edited_by` properties.",
+          "type": "any"
+        },
+        "last_edited_time": {
+          "description": "Configuration for `last_edited_time` properties.",
+          "type": "any"
+        },
+        "multi_select": {
+          "description": "Configuration for `multi_select` properties.",
+          "type": "any"
+        },
+        "name": {
+          "description": "The name of the property.",
+          "type": "string"
+        },
+        "number": {
+          "description": "Configuration for `number` properties.",
+          "type": "any"
+        },
+        "people": {
+          "description": "Configuration for `people` properties.",
+          "type": "any"
+        },
+        "phone_number": {
+          "description": "Configuration for `phone_number` properties.",
+          "type": "any"
+        },
+        "relation": {
+          "description": "Configuration for `relation` properties.",
+          "type": "any"
+        },
+        "rich_text": {
+          "description": "Configuration for `rich_text` properties.",
+          "type": "any"
+        },
+        "rollup": {
+          "description": "Configuration for `rollup` properties.",
+          "type": "any"
+        },
+        "select": {
+          "description": "Configuration for `select` properties.",
+          "type": "any"
+        },
+        "status": {
+          "description": "Configuration for `status` properties.",
+          "type": "any"
+        },
+        "title": {
+          "description": "Configuration for `title` properties.",
+          "type": "any"
+        },
+        "type": {
+          "description": "Property type, e.g. `title`, `rich_text`, `number`, `select`, `multi_select`, `status`, `date`, `people`, `files`, `checkbox`, `url`, `email`, `phone_number`, `formula`, `relation`, `rollup`, `created_time`, `created_by`, `last_edited_time`, `last_edited_by`, `unique_id`.",
+          "type": "string"
+        },
+        "unique_id": {
+          "description": "Configuration for `unique_id` properties.",
+          "type": "any"
+        },
+        "url": {
+          "description": "Configuration for `url` properties.",
+          "type": "any"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source_Reference": {
+      "description": "Reference to a data source inside a database.",
+      "properties": {
+        "id": {
+          "description": "The ID of the data source.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the data source.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source_Template": {
+      "description": "A page template available in a data source.",
+      "properties": {
+        "id": {
+          "description": "ID of the template page.",
+          "type": "string"
+        },
+        "is_default": {
+          "description": "Whether this is the default template.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the template.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Data_Source_Template_Collection": {
+      "description": "Paginated list of data source templates.",
+      "properties": {
+        "has_more": {
+          "description": "Whether there are more templates beyond this page.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page, or null.",
+          "nullable": true,
+          "type": "string"
+        },
+        "templates": {
+          "description": "Templates available in this data source.",
+          "schema": {
+            "target": "Data_Source_Template",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Database": {
+      "description": "A database: a container for one or more data sources.",
+      "properties": {
+        "cover": {
+          "description": "The cover of the database.",
+          "nullable": true,
+          "target": "Cover",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "When the database was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "data_sources": {
+          "description": "The data sources of the database.",
+          "schema": {
+            "target": "Data_Source_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "database_type": {
+          "description": "Typed database kind (`tasks`, `projects`, `sprints`, `docs`, `wiki`, `meetings`, `meeting_notes`, `skills`, `github_prs`), or null for a regular database.",
+          "nullable": true,
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the database.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "icon": {
+          "description": "The icon of the database.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "id": {
+          "description": "The ID of the database.",
+          "type": "string"
+        },
+        "in_trash": {
+          "description": "Whether the database is in the trash.",
+          "type": "boolean"
+        },
+        "is_inline": {
+          "description": "Whether the database is inline.",
+          "type": "boolean"
+        },
+        "is_locked": {
+          "description": "Whether the database is locked from editing in the Notion app UI.",
+          "type": "boolean"
+        },
+        "last_edited_time": {
+          "description": "When the database was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `database`.",
+          "type": "string"
+        },
+        "parent": {
+          "description": "The parent of the database (page, block, workspace, or another database for wikis).",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "public_url": {
+          "description": "The public URL of the database, if publicly accessible.",
+          "nullable": true,
+          "type": "string"
+        },
+        "title": {
+          "description": "The title of the database.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "url": {
+          "description": "The URL of the database.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Database_Parent_Id": {
+      "description": "Parent is a database.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "database_id": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Date_Value": {
+      "description": "A date or date range value.",
+      "properties": {
+        "end": {
+          "description": "The end date, if any.",
+          "nullable": true,
+          "type": "string"
+        },
+        "start": {
+          "description": "The start date (ISO 8601 date or date-time).",
+          "type": "string"
+        },
+        "time_zone": {
+          "description": "The time zone of the date, e.g. America/New_York.",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Embed": {
+      "description": "Content of an embed block.",
+      "properties": {
+        "caption": {
+          "description": "Caption of the embed.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "url": {
+          "description": "The URL of the embedded content.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Emoji_Icon": {
+      "description": "Emoji icon.",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "emoji": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Empty_Object": {
+      "description": "Empty object used by block types without configuration (divider, breadcrumb, tab).",
+      "properties": {},
+      "type": "struct"
+    },
+    "Equation": {
+      "description": "A LaTeX equation expression.",
+      "properties": {
+        "expression": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Error": {
+      "description": "Error response returned by the Notion API for any non-2xx status.",
+      "properties": {
+        "additional_data": {
+          "description": "Extra context, such as retry guidance or endpoint-specific details.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "code": {
+          "description": "Error code, e.g. invalid_json, invalid_request_url, invalid_request, validation_error, missing_version, unauthorized, restricted_resource, object_not_found, conflict_error, rate_limited, internal_server_error, service_unavailable, gateway_timeout.",
+          "type": "string"
+        },
+        "message": {
+          "description": "Human-readable description of the error.",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always \"error\".",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "Unique ID of the request, useful when contacting Notion support.",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code of the error.",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "External_Icon": {
+      "description": "Icon hosted at an external URL.",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "external": {
+          "target": "External_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "External_Object": {
+      "description": "An externally hosted file.",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File": {
+      "description": "File object used by image, video, pdf, file and audio blocks, and by files property values.",
+      "properties": {
+        "caption": {
+          "description": "Caption of the media block.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "external": {
+          "description": "External file URL, when type is external.",
+          "target": "External_Object",
+          "type": "reference"
+        },
+        "file": {
+          "description": "Notion-hosted file, when type is file.",
+          "target": "File_Object",
+          "type": "reference"
+        },
+        "file_upload": {
+          "description": "Uploaded file, when type is file_upload.",
+          "target": "Id_Reference",
+          "type": "reference"
+        },
+        "name": {
+          "description": "Name of the file (file blocks and files properties).",
+          "type": "string"
+        },
+        "type": {
+          "description": "file (Notion-hosted), external or file_upload (request only).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Icon": {
+      "description": "Icon hosted by Notion.",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "file": {
+          "target": "File_Object",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Import_Result": {
+      "description": "Result of importing a file from an external URL.",
+      "properties": {
+        "error": {
+          "description": "Error details when type is `error` (type, code, message, parameter, status_code).",
+          "type": "any"
+        },
+        "imported_time": {
+          "description": "When the file was imported.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "type": {
+          "description": "`success` or `error`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Object": {
+      "description": "A Notion-hosted file with a temporary URL.",
+      "properties": {
+        "expiry_time": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Upload": {
+      "description": "Tracks the lifecycle of a file uploaded to Notion via the API.",
+      "properties": {
+        "complete_url": {
+          "description": "URL to complete a multi-part upload.",
+          "type": "string"
+        },
+        "content_length": {
+          "description": "Size of the file in bytes.",
+          "nullable": true,
+          "type": "integer"
+        },
+        "content_type": {
+          "description": "MIME type of the file.",
+          "nullable": true,
+          "type": "string"
+        },
+        "created_by": {
+          "description": "Creator of the upload.",
+          "target": "File_Upload_Creator",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "When the upload was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "expiry_time": {
+          "description": "When the upload expires if not attached.",
+          "format": "date-time",
+          "nullable": true,
+          "type": "string"
+        },
+        "file_import_result": {
+          "description": "Result of an external_url import.",
+          "target": "File_Import_Result",
+          "type": "reference"
+        },
+        "filename": {
+          "description": "Name of the file.",
+          "nullable": true,
+          "type": "string"
+        },
+        "id": {
+          "description": "ID of the file upload.",
+          "type": "string"
+        },
+        "in_trash": {
+          "description": "Whether the upload is in the trash.",
+          "type": "boolean"
+        },
+        "last_edited_time": {
+          "description": "When the upload was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "number_of_parts": {
+          "description": "Part progress for multi-part uploads.",
+          "target": "File_Upload_Parts",
+          "type": "reference"
+        },
+        "object": {
+          "description": "Always `file_upload`.",
+          "type": "string"
+        },
+        "status": {
+          "description": "`pending`, `uploaded`, `expired` or `failed`.",
+          "type": "string"
+        },
+        "upload_url": {
+          "description": "URL to send the file contents to.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Upload_Collection": {
+      "description": "Paginated list of file uploads.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "List of file uploads.",
+          "schema": {
+            "target": "File_Upload",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `file_upload`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Upload_Creator": {
+      "description": "Who created the file upload.",
+      "properties": {
+        "id": {
+          "description": "ID of the creator.",
+          "type": "string"
+        },
+        "type": {
+          "description": "`person`, `bot` or `agent`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Upload_Icon": {
+      "description": "Icon using a file uploaded via the File Upload API (request only).",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "file_upload": {
+          "description": "The file upload to use.",
+          "target": "Id_Reference",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "File_Upload_Parts": {
+      "description": "Part progress of a multi-part upload.",
+      "properties": {
+        "sent": {
+          "description": "Number of parts sent so far.",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total number of parts.",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "Heading": {
+      "description": "Content of a heading block.",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "is_toggleable": {
+          "type": "boolean"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Icon": {
+      "base": true,
+      "description": "Page, database or block icon.",
+      "discriminator": "type",
+      "mapping": {
+        "Custom_Emoji_Icon": "custom_emoji",
+        "Emoji_Icon": "emoji",
+        "External_Icon": "external",
+        "File_Icon": "file",
+        "File_Upload_Icon": "file_upload",
+        "Noticon_Icon": "icon"
+      },
+      "properties": {
+        "type": {
+          "description": "Type of icon: emoji, file, external, custom_emoji, icon or file_upload.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Id_Reference": {
+      "description": "Reference to a Notion object by its ID.",
+      "properties": {
+        "id": {
+          "description": "The ID of the referenced object.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Initial_Data_Source": {
+      "description": "Configuration of the initial data source of a new database.",
+      "properties": {
+        "properties": {
+          "description": "Property schema of the initial data source.",
+          "schema": {
+            "target": "Data_Source_Property",
+            "type": "reference"
+          },
+          "type": "map"
+        }
+      },
+      "type": "struct"
+    },
+    "Link": {
+      "description": "An inline link.",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Link_Preview": {
+      "description": "Content of a link preview.",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Link_To_Page": {
+      "description": "Content of a link to page block.",
+      "properties": {
+        "comment_id": {
+          "description": "ID of the linked comment.",
+          "type": "string"
+        },
+        "database_id": {
+          "description": "ID of the linked database.",
+          "type": "string"
+        },
+        "page_id": {
+          "description": "ID of the linked page.",
+          "type": "string"
+        },
+        "type": {
+          "description": "page_id, database_id or comment_id.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Markdown_Content_Update": {
+      "description": "A search-and-replace operation on page markdown.",
+      "properties": {
+        "new_str": {
+          "description": "The replacement content.",
+          "type": "string"
+        },
+        "old_str": {
+          "description": "The existing content to find. Must exactly match the page content.",
+          "type": "string"
+        },
+        "replace_all_matches": {
+          "description": "If true, replace all occurrences. If false, the operation fails when there are multiple matches.",
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    },
+    "Markdown_Replace_Content": {
+      "description": "Replace the entire page content with new markdown.",
+      "properties": {
+        "allow_deleting_content": {
+          "description": "Allow deleting child pages or databases. Defaults to false.",
+          "type": "boolean"
+        },
+        "new_str": {
+          "description": "The new enhanced markdown content.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Markdown_Update_Content": {
+      "description": "Search-and-replace updates to page markdown.",
+      "properties": {
+        "allow_deleting_content": {
+          "description": "Allow deleting child pages or databases. Defaults to false.",
+          "type": "boolean"
+        },
+        "content_updates": {
+          "description": "The search-and-replace operations (max 100).",
+          "schema": {
+            "target": "Markdown_Content_Update",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Meeting_Notes": {
+      "description": "Content of a meeting notes block (formerly transcription).",
+      "properties": {
+        "calendar_event": {
+          "description": "Linked calendar event.",
+          "target": "Meeting_Notes_Calendar_Event",
+          "type": "reference"
+        },
+        "children": {
+          "description": "Child block IDs.",
+          "target": "Meeting_Notes_Children",
+          "type": "reference"
+        },
+        "recording": {
+          "description": "Recording time range.",
+          "target": "Meeting_Notes_Recording",
+          "type": "reference"
+        },
+        "status": {
+          "description": "transcription_not_started, transcription_paused, transcription_in_progress, transcription_failed, summary_in_progress or notes_ready.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the meeting notes.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Meeting_Notes_Calendar_Event": {
+      "description": "Calendar event linked to a meeting notes block.",
+      "properties": {
+        "attendees": {
+          "description": "IDs of the attendees.",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "end_time": {
+          "description": "End of the event.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "start_time": {
+          "description": "Start of the event.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Meeting_Notes_Children": {
+      "description": "IDs of the child blocks of a meeting notes block.",
+      "properties": {
+        "notes_block_id": {
+          "description": "ID of the notes block.",
+          "type": "string"
+        },
+        "summary_block_id": {
+          "description": "ID of the summary block.",
+          "type": "string"
+        },
+        "transcript_block_id": {
+          "description": "ID of the transcript block.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Meeting_Notes_Recording": {
+      "description": "Recording time range of a meeting notes block.",
+      "properties": {
+        "end_time": {
+          "description": "End of the recording.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "start_time": {
+          "description": "Start of the recording.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Mention": {
+      "description": "An inline mention of a user, date, page, database, link preview, template or custom emoji.",
+      "properties": {
+        "custom_emoji": {
+          "description": "Mentioned custom emoji.",
+          "target": "Custom_Emoji",
+          "type": "reference"
+        },
+        "database": {
+          "description": "Mentioned database.",
+          "target": "Id_Reference",
+          "type": "reference"
+        },
+        "date": {
+          "description": "Mentioned date.",
+          "target": "Date_Value",
+          "type": "reference"
+        },
+        "link_mention": {
+          "description": "Link mention details.",
+          "type": "any"
+        },
+        "link_preview": {
+          "description": "Link preview mention.",
+          "target": "Link_Preview",
+          "type": "reference"
+        },
+        "page": {
+          "description": "Mentioned page.",
+          "target": "Id_Reference",
+          "type": "reference"
+        },
+        "template_mention": {
+          "description": "Template mention details (template_mention_date or template_mention_user).",
+          "type": "any"
+        },
+        "type": {
+          "description": "user, date, link_preview, link_mention, page, database, template_mention or custom_emoji.",
+          "type": "string"
+        },
+        "user": {
+          "description": "Mentioned user.",
+          "target": "User",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Move_Page_Request": {
+      "description": "Request body to move a page to a new parent.",
+      "properties": {
+        "parent": {
+          "description": "The new parent (`page_id` or `data_source_id`).",
+          "target": "Parent_Id",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Noticon": {
+      "description": "A native Notion icon, specified by name and color.",
+      "properties": {
+        "color": {
+          "description": "Color variant: gray, lightgray, brown, yellow, orange, green, blue, purple, pink, red.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the Notion icon (e.g. pizza, meeting, home).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Noticon_Icon": {
+      "description": "Icon using a native Notion icon.",
+      "parent": {
+        "target": "Icon",
+        "type": "reference"
+      },
+      "properties": {
+        "icon": {
+          "description": "The Notion native icon, specified by name and color.",
+          "target": "Noticon",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Numbered_List_Item": {
+      "properties": {
+        "children": {
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "type": "string"
+        },
+        "list_format": {
+          "description": "numbers, letters or roman.",
+          "type": "string"
+        },
+        "list_start_index": {
+          "description": "Start number of the list.",
+          "type": "integer"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Object_Reference": {
+      "description": "Reference to a Notion object containing its object type and ID.",
+      "properties": {
+        "id": {
+          "description": "The ID of the object.",
+          "type": "string"
+        },
+        "object": {
+          "description": "The object type, e.g. page or view.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Page": {
+      "description": "The Page object contains the page property values of a single Notion page.",
+      "parent": {
+        "target": "Page_Or_Data_Source",
+        "type": "reference"
+      },
+      "properties": {
+        "cover": {
+          "description": "Page cover image.",
+          "nullable": true,
+          "target": "Cover",
+          "type": "reference"
+        },
+        "created_by": {
+          "description": "User who created the page.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "Date and time when this page was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "icon": {
+          "description": "Page icon.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Whether the page is in trash.",
+          "type": "boolean"
+        },
+        "is_archived": {
+          "description": "Whether the page has been archived.",
+          "type": "boolean"
+        },
+        "is_locked": {
+          "description": "Whether the page is locked from editing in the Notion app UI.",
+          "type": "boolean"
+        },
+        "last_edited_by": {
+          "description": "User who last edited the page.",
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "Date and time when this page was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "parent": {
+          "description": "Information about the page's parent.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "properties": {
+          "description": "Property values of this page.",
+          "schema": {
+            "target": "Page_Property_Value",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "public_url": {
+          "description": "The public URL of the page, if it has been published to the web.",
+          "nullable": true,
+          "type": "string"
+        },
+        "url": {
+          "description": "The URL of the Notion page.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Markdown": {
+      "description": "Page content rendered as enhanced Markdown.",
+      "properties": {
+        "id": {
+          "description": "The ID of the page or block.",
+          "type": "string"
+        },
+        "markdown": {
+          "description": "The page content rendered as enhanced Markdown.",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `page_markdown`.",
+          "type": "string"
+        },
+        "truncated": {
+          "description": "Whether the content was truncated due to exceeding the record count limit.",
+          "type": "boolean"
+        },
+        "unknown_block_ids": {
+          "description": "Block IDs that could not be loaded. Pass them back to this endpoint to fetch their content separately.",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Or_Data_Source": {
+      "base": true,
+      "description": "A page or data source object, as returned by search and data source queries.",
+      "discriminator": "object",
+      "mapping": {
+        "Data_Source": "data_source",
+        "Page": "page"
+      },
+      "properties": {
+        "id": {
+          "description": "The ID of the object.",
+          "type": "string"
+        },
+        "object": {
+          "description": "`page` or `data_source`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Or_Data_Source_Collection": {
+      "description": "Paginated list of pages and/or data sources.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page of results.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "Pages and data sources.",
+          "schema": {
+            "target": "Page_Or_Data_Source",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `page_or_data_source`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Parent_Id": {
+      "description": "Parent is a page.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "page_id": {
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Property_Value": {
+      "description": "Value of a page property. `type` names the key that holds the value.",
+      "properties": {
+        "button": {
+          "description": "Button property (always empty).",
+          "target": "Empty_Object",
+          "type": "reference"
+        },
+        "checkbox": {
+          "description": "Checkbox value.",
+          "type": "boolean"
+        },
+        "created_by": {
+          "description": "Created by value.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "Created time value.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "date": {
+          "description": "Date value.",
+          "nullable": true,
+          "target": "Date_Value",
+          "type": "reference"
+        },
+        "email": {
+          "description": "Email value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "files": {
+          "description": "Files value.",
+          "schema": {
+            "target": "File",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "formula": {
+          "description": "Formula result (type plus string/number/boolean/date).",
+          "type": "any"
+        },
+        "has_more": {
+          "description": "For relation values, whether more than the returned references exist.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Underlying identifier of the property.",
+          "type": "string"
+        },
+        "last_edited_by": {
+          "description": "Last edited by value.",
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "Last edited time value.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "multi_select": {
+          "description": "Multi-select values.",
+          "schema": {
+            "target": "Select_Option",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "number": {
+          "description": "Number value.",
+          "nullable": true,
+          "type": "number"
+        },
+        "people": {
+          "description": "People value.",
+          "schema": {
+            "target": "User",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "phone_number": {
+          "description": "Phone number value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "place": {
+          "description": "Place value.",
+          "type": "any"
+        },
+        "relation": {
+          "description": "Related pages (at most 25 in page responses).",
+          "schema": {
+            "target": "Id_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "rich_text": {
+          "description": "Rich text value.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "rollup": {
+          "description": "Rollup result.",
+          "type": "any"
+        },
+        "select": {
+          "description": "Select value.",
+          "nullable": true,
+          "target": "Select_Option",
+          "type": "reference"
+        },
+        "status": {
+          "description": "Status value.",
+          "nullable": true,
+          "target": "Select_Option",
+          "type": "reference"
+        },
+        "title": {
+          "description": "Title value.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Property type: `title`, `rich_text`, `number`, `select`, `multi_select`, `status`, `date`, `people`, `files`, `checkbox`, `url`, `email`, `phone_number`, `formula`, `relation`, `rollup`, `created_time`, `created_by`, `last_edited_time`, `last_edited_by`, `button`, `unique_id`, `verification` or `place`.",
+          "type": "string"
+        },
+        "unique_id": {
+          "description": "Unique ID value (`prefix`, `number`).",
+          "type": "any"
+        },
+        "url": {
+          "description": "URL value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "verification": {
+          "description": "Verification value.",
+          "type": "any"
+        }
+      },
+      "type": "struct"
+    },
+    "Page_Template": {
+      "description": "Template to apply when creating or updating a page.",
+      "properties": {
+        "template_id": {
+          "description": "ID of the template, when type is `template_id`.",
+          "type": "string"
+        },
+        "timezone": {
+          "description": "IANA time zone used to resolve template date variables.",
+          "type": "string"
+        },
+        "type": {
+          "description": "`none`, `default` or `template_id`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Paragraph": {
+      "description": "Content of a paragraph block.",
+      "properties": {
+        "children": {
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "type": "string"
+        },
+        "icon": {
+          "description": "Optional icon of the paragraph.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Parent_Id": {
+      "base": true,
+      "description": "Information about the parent of a page, block, database, data source or comment.",
+      "discriminator": "type",
+      "mapping": {
+        "Agent_Parent_Id": "agent_id",
+        "Block_Parent_Id": "block_id",
+        "Data_Source_Parent_Id": "data_source_id",
+        "Database_Parent_Id": "database_id",
+        "Page_Parent_Id": "page_id",
+        "Workspace_Parent_Id": "workspace"
+      },
+      "properties": {
+        "type": {
+          "description": "The parent type.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Person": {
+      "description": "Details about a person user.",
+      "properties": {
+        "email": {
+          "description": "The email of the person.",
+          "type": "string"
+        },
+        "email_verified": {
+          "description": "Whether the person's email is verified.",
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    },
+    "Property_Item": {
+      "description": "A single page property item, or a paginated list of property items for title, rich_text, relation, people and rollup properties.",
+      "properties": {
+        "button": {
+          "description": "Button property (always empty).",
+          "target": "Empty_Object",
+          "type": "reference"
+        },
+        "checkbox": {
+          "description": "Checkbox value.",
+          "type": "boolean"
+        },
+        "created_by": {
+          "description": "Created by value.",
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "Created time value.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "date": {
+          "description": "Date value.",
+          "nullable": true,
+          "target": "Date_Value",
+          "type": "reference"
+        },
+        "email": {
+          "description": "Email value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "files": {
+          "description": "Files value.",
+          "schema": {
+            "target": "File",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "formula": {
+          "description": "Formula result (type plus string/number/boolean/date).",
+          "type": "any"
+        },
+        "has_more": {
+          "description": "Whether more items exist (list only); for relation property values, whether more than the returned references exist.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Underlying identifier of the property.",
+          "type": "string"
+        },
+        "last_edited_by": {
+          "description": "Last edited by value.",
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "Last edited time value.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "multi_select": {
+          "description": "Multi-select values.",
+          "schema": {
+            "target": "Select_Option",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page (list only).",
+          "nullable": true,
+          "type": "string"
+        },
+        "number": {
+          "description": "Number value.",
+          "nullable": true,
+          "type": "number"
+        },
+        "object": {
+          "description": "`property_item` or `list`.",
+          "type": "string"
+        },
+        "people": {
+          "description": "People value.",
+          "schema": {
+            "target": "User",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "phone_number": {
+          "description": "Phone number value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "place": {
+          "description": "Place value.",
+          "type": "any"
+        },
+        "property_item": {
+          "description": "Property metadata of the list (id, type, next_url).",
+          "type": "any"
+        },
+        "relation": {
+          "description": "Related pages (at most 25 in page responses).",
+          "schema": {
+            "target": "Id_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "results": {
+          "description": "Property items (list only).",
+          "schema": {
+            "target": "Property_Item",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "rich_text": {
+          "description": "Rich text value.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "rollup": {
+          "description": "Rollup result.",
+          "type": "any"
+        },
+        "select": {
+          "description": "Select value.",
+          "nullable": true,
+          "target": "Select_Option",
+          "type": "reference"
+        },
+        "status": {
+          "description": "Status value.",
+          "nullable": true,
+          "target": "Select_Option",
+          "type": "reference"
+        },
+        "title": {
+          "description": "Title value.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Property type: `title`, `rich_text`, `number`, `select`, `multi_select`, `status`, `date`, `people`, `files`, `checkbox`, `url`, `email`, `phone_number`, `formula`, `relation`, `rollup`, `created_time`, `created_by`, `last_edited_time`, `last_edited_by`, `button`, `unique_id`, `verification` or `place`.",
+          "type": "string"
+        },
+        "unique_id": {
+          "description": "Unique ID value (`prefix`, `number`).",
+          "type": "any"
+        },
+        "url": {
+          "description": "URL value.",
+          "nullable": true,
+          "type": "string"
+        },
+        "verification": {
+          "description": "Verification value.",
+          "type": "any"
+        }
+      },
+      "type": "struct"
+    },
+    "Query_Data_Source_Request": {
+      "description": "Request body to query a data source.",
+      "properties": {
+        "filter": {
+          "description": "Filter conditions (property, timestamp, or compound `and`/`or` filters).",
+          "type": "any"
+        },
+        "is_archived": {
+          "description": "When true, returns archived pages instead of non-archived pages.",
+          "type": "boolean"
+        },
+        "page_size": {
+          "description": "Number of items to return (max 100).",
+          "type": "integer"
+        },
+        "result_type": {
+          "description": "Only return `page` or `data_source` results (wikis).",
+          "type": "string"
+        },
+        "sorts": {
+          "description": "Sort conditions.",
+          "schema": {
+            "target": "Sort",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "start_cursor": {
+          "description": "Cursor from a previous response.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Quote": {
+      "description": "Content of a quote block.",
+      "properties": {
+        "children": {
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "type": "string"
+        },
+        "rich_text": {
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Request_Status": {
+      "description": "Indicates whether a paginated result set is complete.",
+      "properties": {
+        "incomplete_reason": {
+          "description": "Why the result set is incomplete, e.g. query_result_limit_reached. Only present when type is incomplete.",
+          "type": "string"
+        },
+        "type": {
+          "description": "complete or incomplete. incomplete means the response does not include all rows that match the query (e.g. due to a server-side pagination depth limit).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Rich_Text": {
+      "base": true,
+      "description": "Rich text object containing styled text, mentions or inline equations.",
+      "discriminator": "type",
+      "mapping": {
+        "Rich_Text_Equation": "equation",
+        "Rich_Text_Mention": "mention",
+        "Rich_Text_Text": "text"
+      },
+      "properties": {
+        "annotations": {
+          "description": "Styling of the rich text.",
+          "target": "Rich_Text_Annotation",
+          "type": "reference"
+        },
+        "href": {
+          "description": "A URL that the rich text links to or mentions.",
+          "nullable": true,
+          "type": "string"
+        },
+        "plain_text": {
+          "description": "The plain text content, without any styling.",
+          "type": "string"
+        },
+        "type": {
+          "description": "text, mention or equation.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Rich_Text_Annotation": {
+      "description": "Styling annotations of rich text.",
+      "properties": {
+        "bold": {
+          "type": "boolean"
+        },
+        "code": {
+          "type": "boolean"
+        },
+        "color": {
+          "type": "string"
+        },
+        "italic": {
+          "type": "boolean"
+        },
+        "strikethrough": {
+          "type": "boolean"
+        },
+        "underline": {
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    },
+    "Rich_Text_Equation": {
+      "description": "Rich text object of type equation.",
+      "parent": {
+        "target": "Rich_Text",
+        "type": "reference"
+      },
+      "properties": {
+        "equation": {
+          "target": "Equation",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Rich_Text_Mention": {
+      "description": "Rich text object of type mention.",
+      "parent": {
+        "target": "Rich_Text",
+        "type": "reference"
+      },
+      "properties": {
+        "mention": {
+          "description": "The mention details.",
+          "target": "Mention",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Rich_Text_Text": {
+      "description": "Rich text object of type text.",
+      "parent": {
+        "target": "Rich_Text",
+        "type": "reference"
+      },
+      "properties": {
+        "text": {
+          "target": "Text",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Search_Filter": {
+      "description": "Filter for search results.",
+      "properties": {
+        "in_trash": {
+          "description": "Whether to search trashed objects.",
+          "type": "boolean"
+        },
+        "property": {
+          "description": "Always `object`.",
+          "type": "string"
+        },
+        "value": {
+          "description": "`page` or `data_source`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Search_Request": {
+      "description": "Request body to search pages and data sources by title.",
+      "properties": {
+        "filter": {
+          "description": "Limit results to pages or data sources.",
+          "target": "Search_Filter",
+          "type": "reference"
+        },
+        "page_size": {
+          "description": "Number of items to return (max 100).",
+          "type": "integer"
+        },
+        "query": {
+          "description": "Text to match against page and data source titles.",
+          "type": "string"
+        },
+        "sort": {
+          "description": "Sort order of results.",
+          "target": "Search_Sort",
+          "type": "reference"
+        },
+        "start_cursor": {
+          "description": "Cursor from a previous response.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Search_Sort": {
+      "description": "Sort for search results.",
+      "properties": {
+        "direction": {
+          "description": "`ascending` or `descending`.",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Always `last_edited_time`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Select_Option": {
+      "description": "A select, multi-select or status option.",
+      "properties": {
+        "color": {
+          "description": "One of default, gray, brown, orange, yellow, green, blue, purple, pink, red.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the option.",
+          "nullable": true,
+          "type": "string"
+        },
+        "id": {
+          "description": "ID of the option.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the option.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Sort": {
+      "description": "A sort condition for data source queries and views.",
+      "properties": {
+        "direction": {
+          "description": "`ascending` or `descending`.",
+          "type": "string"
+        },
+        "property": {
+          "description": "Name or ID of the property to sort by.",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "`created_time` or `last_edited_time` (instead of property).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Synced_Block": {
+      "description": "Content of a synced block.",
+      "properties": {
+        "children": {
+          "description": "Nested child blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "synced_from": {
+          "description": "Null for an original synced block, otherwise the original block it is synced from.",
+          "nullable": true,
+          "target": "Synced_Block_From",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Synced_Block_From": {
+      "description": "Reference to the original synced block.",
+      "properties": {
+        "block_id": {
+          "description": "The ID of the original synced block.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Always block_id.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Table": {
+      "description": "Content of a table block.",
+      "properties": {
+        "children": {
+          "description": "Table row blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "has_column_header": {
+          "description": "Whether the first row is a header.",
+          "type": "boolean"
+        },
+        "has_row_header": {
+          "description": "Whether the first column is a header.",
+          "type": "boolean"
+        },
+        "table_width": {
+          "description": "Number of columns in the table (cannot be changed after creation).",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "Table_Of_Contents": {
+      "description": "Content of a table of contents block.",
+      "properties": {
+        "color": {
+          "description": "Color of the block.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Table_Row": {
+      "description": "Content of a table row block.",
+      "properties": {
+        "cells": {
+          "description": "Cell contents, one rich text array per cell.",
+          "schema": {
+            "schema": {
+              "target": "Rich_Text",
+              "type": "reference"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Template": {
+      "description": "Content of a template block (deprecated in the Notion UI).",
+      "properties": {
+        "children": {
+          "description": "Nested child blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "rich_text": {
+          "description": "Title of the template button.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Text": {
+      "description": "Text content of a rich text object of type text.",
+      "properties": {
+        "content": {
+          "description": "The actual text content (max 2000 characters).",
+          "type": "string"
+        },
+        "link": {
+          "description": "Inline link information, if included.",
+          "nullable": true,
+          "target": "Link",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "To_Do": {
+      "description": "Content of a to-do block.",
+      "properties": {
+        "checked": {
+          "description": "Whether the to-do is checked.",
+          "type": "boolean"
+        },
+        "children": {
+          "description": "Nested child blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "description": "Color of the block.",
+          "type": "string"
+        },
+        "rich_text": {
+          "description": "Text of the to-do.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Toggle": {
+      "description": "Content of a toggle block.",
+      "properties": {
+        "children": {
+          "description": "Nested child blocks (request only).",
+          "schema": {
+            "target": "Block",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "color": {
+          "description": "Color of the block.",
+          "type": "string"
+        },
+        "rich_text": {
+          "description": "Text of the toggle.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Unsupported": {
+      "description": "Content of a block type not supported by the public API.",
+      "properties": {
+        "block_type": {
+          "description": "The underlying block type, e.g. form, button, drive.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Block_Request": {
+      "description": "Request body to update a block. Send the key that matches the block's type, and/or `in_trash`.",
+      "properties": {
+        "audio": {
+          "description": "New content for `audio` blocks.",
+          "target": "File",
+          "type": "reference"
+        },
+        "bookmark": {
+          "description": "New content for `bookmark` blocks.",
+          "target": "Bookmark",
+          "type": "reference"
+        },
+        "breadcrumb": {
+          "description": "New content for `breadcrumb` blocks.",
+          "target": "Empty_Object",
+          "type": "reference"
+        },
+        "bulleted_list_item": {
+          "description": "New content for `bulleted_list_item` blocks.",
+          "target": "Bulleted_List_Item",
+          "type": "reference"
+        },
+        "callout": {
+          "description": "New content for `callout` blocks.",
+          "target": "Callout",
+          "type": "reference"
+        },
+        "code": {
+          "description": "New content for `code` blocks.",
+          "target": "Code",
+          "type": "reference"
+        },
+        "column": {
+          "description": "New content for `column` blocks.",
+          "target": "Column",
+          "type": "reference"
+        },
+        "divider": {
+          "description": "New content for `divider` blocks.",
+          "target": "Empty_Object",
+          "type": "reference"
+        },
+        "embed": {
+          "description": "New content for `embed` blocks.",
+          "target": "Embed",
+          "type": "reference"
+        },
+        "equation": {
+          "description": "New content for `equation` blocks.",
+          "target": "Equation",
+          "type": "reference"
+        },
+        "file": {
+          "description": "New content for `file` blocks.",
+          "target": "File",
+          "type": "reference"
+        },
+        "heading_1": {
+          "description": "New content for `heading_1` blocks.",
+          "target": "Heading",
+          "type": "reference"
+        },
+        "heading_2": {
+          "description": "New content for `heading_2` blocks.",
+          "target": "Heading",
+          "type": "reference"
+        },
+        "heading_3": {
+          "description": "New content for `heading_3` blocks.",
+          "target": "Heading",
+          "type": "reference"
+        },
+        "heading_4": {
+          "description": "New content for `heading_4` blocks.",
+          "target": "Heading",
+          "type": "reference"
+        },
+        "image": {
+          "description": "New content for `image` blocks.",
+          "target": "File",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Set to true to trash the block, or false to restore it.",
+          "type": "boolean"
+        },
+        "link_to_page": {
+          "description": "New content for `link_to_page` blocks.",
+          "target": "Link_To_Page",
+          "type": "reference"
+        },
+        "numbered_list_item": {
+          "description": "New content for `numbered_list_item` blocks.",
+          "target": "Numbered_List_Item",
+          "type": "reference"
+        },
+        "paragraph": {
+          "description": "New content for `paragraph` blocks.",
+          "target": "Paragraph",
+          "type": "reference"
+        },
+        "pdf": {
+          "description": "New content for `pdf` blocks.",
+          "target": "File",
+          "type": "reference"
+        },
+        "quote": {
+          "description": "New content for `quote` blocks.",
+          "target": "Quote",
+          "type": "reference"
+        },
+        "synced_block": {
+          "description": "New content for `synced_block` blocks.",
+          "target": "Synced_Block",
+          "type": "reference"
+        },
+        "tab": {
+          "description": "New content for `tab` blocks.",
+          "target": "Empty_Object",
+          "type": "reference"
+        },
+        "table": {
+          "description": "New content for `table` blocks.",
+          "target": "Table",
+          "type": "reference"
+        },
+        "table_of_contents": {
+          "description": "New content for `table_of_contents` blocks.",
+          "target": "Table_Of_Contents",
+          "type": "reference"
+        },
+        "table_row": {
+          "description": "New content for `table_row` blocks.",
+          "target": "Table_Row",
+          "type": "reference"
+        },
+        "template": {
+          "description": "New content for `template` blocks.",
+          "target": "Template",
+          "type": "reference"
+        },
+        "to_do": {
+          "description": "New content for `to_do` blocks.",
+          "target": "To_Do",
+          "type": "reference"
+        },
+        "toggle": {
+          "description": "New content for `toggle` blocks.",
+          "target": "Toggle",
+          "type": "reference"
+        },
+        "video": {
+          "description": "New content for `video` blocks.",
+          "target": "File",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Comment_Request": {
+      "description": "Request body to update a comment. Provide either `rich_text` or `markdown`.",
+      "properties": {
+        "markdown": {
+          "description": "Updated content as Markdown.",
+          "type": "string"
+        },
+        "rich_text": {
+          "description": "Updated content of the comment.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Data_Source_Request": {
+      "description": "Request body to update a data source's title, icon, schema, trash status or parent.",
+      "properties": {
+        "icon": {
+          "description": "Data source icon.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Move the data source to or from the trash.",
+          "type": "boolean"
+        },
+        "parent": {
+          "description": "New parent database to move the data source to.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "properties": {
+          "description": "Property schema changes, keyed by property name or ID. A property set to null is removed.",
+          "schema": {
+            "target": "Data_Source_Property",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "title": {
+          "description": "Title of the data source.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Database_Request": {
+      "description": "Request body to update database attributes.",
+      "properties": {
+        "cover": {
+          "description": "The updated cover.",
+          "target": "Cover",
+          "type": "reference"
+        },
+        "description": {
+          "description": "The updated description.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "icon": {
+          "description": "The updated icon.",
+          "target": "Icon",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Move the database to or from the trash.",
+          "type": "boolean"
+        },
+        "is_inline": {
+          "description": "Whether the database is displayed inline.",
+          "type": "boolean"
+        },
+        "is_locked": {
+          "description": "Lock the database from editing in the Notion app UI.",
+          "type": "boolean"
+        },
+        "parent": {
+          "description": "New parent page or workspace to move the database to.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "title": {
+          "description": "The updated title.",
+          "schema": {
+            "target": "Rich_Text",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Page_Markdown_Request": {
+      "description": "Request body to update a page's content with enhanced markdown.",
+      "properties": {
+        "allow_async": {
+          "description": "Opt into an async_task result when the update runs in the background.",
+          "type": "boolean"
+        },
+        "replace_content": {
+          "description": "Used when type is `replace_content`.",
+          "target": "Markdown_Replace_Content",
+          "type": "reference"
+        },
+        "type": {
+          "description": "`update_content` or `replace_content`.",
+          "type": "string"
+        },
+        "update_content": {
+          "description": "Used when type is `update_content`.",
+          "target": "Markdown_Update_Content",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Page_Request": {
+      "description": "Request body to update page properties, icon, cover or trash status.",
+      "properties": {
+        "cover": {
+          "description": "Page cover.",
+          "nullable": true,
+          "target": "Cover",
+          "type": "reference"
+        },
+        "erase_content": {
+          "description": "Whether to erase all existing content from the page.",
+          "type": "boolean"
+        },
+        "icon": {
+          "description": "Page icon.",
+          "nullable": true,
+          "target": "Icon",
+          "type": "reference"
+        },
+        "in_trash": {
+          "description": "Set to true to move the page to trash, or false to restore it.",
+          "type": "boolean"
+        },
+        "is_archived": {
+          "description": "Whether the page is archived.",
+          "type": "boolean"
+        },
+        "is_locked": {
+          "description": "Whether the page should be locked from editing in the Notion app UI.",
+          "type": "boolean"
+        },
+        "properties": {
+          "description": "Property values to update.",
+          "schema": {
+            "target": "Page_Property_Value",
+            "type": "reference"
+          },
+          "type": "map"
+        },
+        "template": {
+          "description": "Template to apply.",
+          "target": "Page_Template",
+          "type": "reference"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_View_Request": {
+      "description": "Request body to update a view.",
+      "properties": {
+        "configuration": {
+          "description": "View presentation configuration.",
+          "type": "any"
+        },
+        "filter": {
+          "description": "Filter to apply. Null clears it.",
+          "type": "any"
+        },
+        "name": {
+          "description": "New name for the view.",
+          "type": "string"
+        },
+        "quick_filters": {
+          "description": "Quick filters to add, update or remove (null value).",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "sorts": {
+          "description": "Property sorts. Null clears them.",
+          "schema": {
+            "target": "Sort",
+            "type": "reference"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "User": {
+      "description": "A user in a Notion workspace: a member, guest or bot (integration).",
+      "properties": {
+        "avatar_url": {
+          "description": "The avatar URL of the user.",
+          "nullable": true,
+          "type": "string"
+        },
+        "bot": {
+          "description": "Details about the bot, when type is bot.",
+          "target": "User_Bot",
+          "type": "reference"
+        },
+        "id": {
+          "description": "The ID of the user.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the user.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always \"user\".",
+          "type": "string"
+        },
+        "person": {
+          "description": "Details about the person, when type is person.",
+          "target": "Person",
+          "type": "reference"
+        },
+        "type": {
+          "description": "person or bot.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "User_Bot": {
+      "description": "Details about a bot user.",
+      "properties": {
+        "owner": {
+          "description": "Details about the owner of the bot.",
+          "target": "User_Bot_Owner",
+          "type": "reference"
+        },
+        "workspace_id": {
+          "description": "The ID of the bot's workspace.",
+          "type": "string"
+        },
+        "workspace_limits": {
+          "description": "Limits that apply to the bot's workspace.",
+          "target": "User_Bot_Workspace_Limits",
+          "type": "reference"
+        },
+        "workspace_name": {
+          "description": "The name of the bot's workspace.",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "User_Bot_Owner": {
+      "description": "Details about the owner of the bot.",
+      "properties": {
+        "type": {
+          "description": "user or workspace.",
+          "type": "string"
+        },
+        "user": {
+          "description": "The owning user, when type is user.",
+          "target": "User",
+          "type": "reference"
+        },
+        "workspace": {
+          "description": "Always true when type is workspace.",
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    },
+    "User_Bot_Workspace_Limits": {
+      "description": "Limits and restrictions that apply to the bot's workspace.",
+      "properties": {
+        "max_file_upload_size_in_bytes": {
+          "description": "Maximum allowed size of a file upload in bytes.",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "User_Collection": {
+      "description": "Paginated list of users.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page of results.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always \"list\".",
+          "type": "string"
+        },
+        "results": {
+          "description": "List of users.",
+          "schema": {
+            "target": "User",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always \"user\".",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View": {
+      "description": "A view of a database (table, board, list, calendar, timeline, gallery, form, chart, map or dashboard).",
+      "properties": {
+        "configuration": {
+          "description": "View presentation configuration.",
+          "type": "any"
+        },
+        "created_by": {
+          "description": "The user who created the view.",
+          "nullable": true,
+          "target": "User",
+          "type": "reference"
+        },
+        "created_time": {
+          "description": "When the view was created.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "dashboard_view_id": {
+          "description": "For dashboard widget views, the ID of the parent dashboard view.",
+          "type": "string"
+        },
+        "data_source_id": {
+          "description": "The data source this view is scoped to, or null for dashboard views.",
+          "nullable": true,
+          "type": "string"
+        },
+        "filter": {
+          "description": "The filter applied to the view (same shape as a data source query filter).",
+          "type": "any"
+        },
+        "id": {
+          "description": "The ID of the view.",
+          "type": "string"
+        },
+        "last_edited_by": {
+          "description": "The user who last edited the view.",
+          "nullable": true,
+          "target": "User",
+          "type": "reference"
+        },
+        "last_edited_time": {
+          "description": "When the view was last edited.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the view.",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `view`.",
+          "type": "string"
+        },
+        "parent": {
+          "description": "The parent database of the view.",
+          "target": "Parent_Id",
+          "type": "reference"
+        },
+        "quick_filters": {
+          "description": "Quick filters pinned to the view's filter bar, keyed by property ID.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "sorts": {
+          "description": "The sorts applied to the view.",
+          "schema": {
+            "target": "Sort",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "`table`, `board`, `list`, `calendar`, `timeline`, `gallery`, `form`, `chart`, `map` or `dashboard`.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Canonical deep link to the view in Notion.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View_Collection": {
+      "description": "Paginated list of view references.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "View references.",
+          "schema": {
+            "target": "Object_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `view`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View_Position": {
+      "description": "Where to place a new view in the database's view tab bar.",
+      "properties": {
+        "type": {
+          "description": "`start`, `end` or `after_view`.",
+          "type": "string"
+        },
+        "view_id": {
+          "description": "Existing view to place the new view after (for `after_view`).",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View_Query": {
+      "description": "A cached execution of a view's query with its first page of results.",
+      "properties": {
+        "expires_at": {
+          "description": "When the cached results expire.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The query ID.",
+          "type": "string"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `view_query`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "Page references in this page of results.",
+          "schema": {
+            "target": "Object_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "total_count": {
+          "description": "Total number of results.",
+          "type": "number"
+        },
+        "view_id": {
+          "description": "The view this query was executed against.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View_Query_Deletion": {
+      "description": "Result of deleting a cached view query.",
+      "properties": {
+        "deleted": {
+          "description": "Whether the view query was deleted.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The ID of the deleted view query.",
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `view_query`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "View_Query_Result_Collection": {
+      "description": "Paginated cached results of a view query.",
+      "properties": {
+        "has_more": {
+          "description": "Whether more results are available.",
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Always `list`.",
+          "type": "string"
+        },
+        "request_status": {
+          "description": "Whether the result set is complete.",
+          "target": "Request_Status",
+          "type": "reference"
+        },
+        "results": {
+          "description": "Page references.",
+          "schema": {
+            "target": "Object_Reference",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Always `page`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Widget_Placement": {
+      "description": "Where to place a new widget in a dashboard view.",
+      "properties": {
+        "row_index": {
+          "description": "0-based row index.",
+          "type": "integer"
+        },
+        "type": {
+          "description": "`new_row` or `existing_row`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Workspace_Parent_Id": {
+      "description": "Parent is the workspace.",
+      "parent": {
+        "target": "Parent_Id",
+        "type": "reference"
+      },
+      "properties": {
+        "workspace": {
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    }
+  },
+  "operations": {
+    "block.appendChildren": {
       "arguments": {
         "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
           "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "block_id": {
+          "in": "path",
           "schema": {
             "type": "string"
           }
         },
-        "start_cursor": {
-          "in": "query",
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Append_Block_Children_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Creates and appends new children blocks to the parent block or page specified.",
+      "method": "PATCH",
+      "path": "/blocks/:block_id/children",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Block_Collection",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "block.delete": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "block_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Moves a block (including a page) to the trash.",
+      "method": "DELETE",
+      "path": "/blocks/:block_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Block",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "block.get": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "block_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a Block object using the ID specified.",
+      "method": "GET",
+      "path": "/blocks/:block_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Block",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "block.getChildren": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "block_id": {
+          "in": "path",
           "schema": {
             "type": "string"
           }
         },
         "page_size": {
+          "description": "Number of items to return (max 100).",
           "in": "query",
           "schema": {
             "type": "integer"
           }
+        },
+        "start_cursor": {
+          "description": "Cursor from a previous response's next_cursor.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
         }
       },
+      "authorization": true,
+      "description": "Returns a paginated array of child block objects contained in the block (or page) using the ID specified.",
+      "method": "GET",
+      "path": "/blocks/:block_id/children",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Block_Collection",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
       "throws": [
         {
           "code": 999,
           "schema": {
-            "type": "reference",
-            "target": "Error"
+            "target": "Error",
+            "type": "reference"
           }
         }
-      ],
-      "description": "Returns a paginated list of Users for the workspace. The response may contain fewer than page_size of results.",
-      "stability": 1,
-      "security": [],
-      "authorization": true
+      ]
     },
-    "user.get": {
-      "path": "/v1/users/:user_id",
-      "method": "GET",
+    "block.update": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "block_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Update_Block_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Updates the content of a block based on its type, or moves it to/from the trash.",
+      "method": "PATCH",
+      "path": "/blocks/:block_id",
       "return": {
         "code": 200,
         "schema": {
-          "type": "reference",
-          "target": "User"
+          "target": "Block",
+          "type": "reference"
         }
       },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "dataSource.create": {
       "arguments": {
         "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
           "in": "header",
           "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Create_Data_Source_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Creates an additional data source in an existing database.",
+      "method": "POST",
+      "path": "/data_sources",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Data_Source",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "dataSource.get": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "data_source_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a data source object, including its property schema.",
+      "method": "GET",
+      "path": "/data_sources/:data_source_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Data_Source",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "database.create": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Create_Database_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Creates a database and its initial data source as a child of a page or the workspace.",
+      "method": "POST",
+      "path": "/databases",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Database",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "database.get": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "database_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a database object, a container for one or more data sources, for a provided database ID. Use Retrieve a data source to read its property schema.",
+      "method": "GET",
+      "path": "/databases/:database_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Database",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "database.update": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "database_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Update_Database_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Updates the attributes (title, description, icon, cover, parent, inline, trash and lock status) of a database.",
+      "method": "PATCH",
+      "path": "/databases/:database_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Database",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.create": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "filter_properties": {
+          "description": "Property IDs to include in the response.",
+          "in": "query",
+          "schema": {
+            "schema": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Create_Page_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Creates a new page as a child of an existing page or data source.",
+      "method": "POST",
+      "path": "/pages",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.get": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "filter_properties": {
+          "description": "Property IDs to include in the response.",
+          "in": "query",
+          "schema": {
+            "schema": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a Page object using the ID specified. To read page content, use Retrieve block children.",
+      "method": "GET",
+      "path": "/pages/:page_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.getMarkdown": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "include_transcript": {
+          "description": "Whether to include meeting note transcripts. Defaults to false.",
+          "in": "query",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves the content of a page rendered as enhanced markdown.",
+      "method": "GET",
+      "path": "/pages/:page_id/markdown",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page_Markdown",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.getProperty": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "page_size": {
+          "description": "Number of items to return (max 100).",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "property_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "start_cursor": {
+          "description": "Cursor from a previous response's next_cursor.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a page property item. Paginated for title, rich_text, relation, people and rollup properties.",
+      "method": "GET",
+      "path": "/pages/:page_id/properties/:property_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Property_Item",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.move": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Move_Page_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Moves an existing page to a new parent page or data source.",
+      "method": "POST",
+      "path": "/pages/:page_id/move",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.update": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "filter_properties": {
+          "description": "Property IDs to include in the response.",
+          "in": "query",
+          "schema": {
+            "schema": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Update_Page_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Updates page properties, icon, cover, lock state or trash status (in_trash).",
+      "method": "PATCH",
+      "path": "/pages/:page_id",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "page.updateMarkdown": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "page_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Update_Page_Markdown_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Updates or replaces content in a page using enhanced markdown.",
+      "method": "PATCH",
+      "path": "/pages/:page_id/markdown",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Page_Markdown",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "user.get": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
             "type": "string"
           }
         },
@@ -72,1199 +5163,113 @@
           }
         }
       },
-      "throws": [
-        {
-          "code": 999,
-          "schema": {
-            "type": "reference",
-            "target": "Error"
-          }
-        }
-      ],
+      "authorization": true,
       "description": "Retrieves a User using the ID specified.",
-      "stability": 1,
-      "security": [],
-      "authorization": true
-    },
-    "database.get": {
-      "path": "/v1/databases/:database_id",
       "method": "GET",
+      "path": "/users/:user_id",
       "return": {
         "code": 200,
         "schema": {
-          "type": "reference",
-          "target": "Database"
+          "target": "User",
+          "type": "reference"
         }
       },
-      "arguments": {
-        "Notion-Version": {
-          "in": "header",
-          "schema": {
-            "type": "string"
-          }
-        },
-        "database_id": {
-          "in": "path",
-          "schema": {
-            "type": "string"
-          }
-        }
-      },
+      "security": [],
+      "stability": 1,
       "throws": [
         {
           "code": 999,
           "schema": {
-            "type": "reference",
-            "target": "Error"
+            "target": "Error",
+            "type": "reference"
           }
         }
-      ],
-      "description": "Retrieves a database object — information that describes the structure and columns of a database — for a provided database ID.",
-      "stability": 1,
-      "security": [],
-      "authorization": true
+      ]
     },
-    "page.get": {
-      "path": "/v1/pages/:page_id",
+    "user.getAll": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        },
+        "page_size": {
+          "description": "Number of items to return (max 100).",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "start_cursor": {
+          "description": "Cursor from a previous response's next_cursor.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Returns a paginated list of Users for the workspace. The response may contain fewer than page_size of results.",
       "method": "GET",
+      "path": "/users",
       "return": {
         "code": 200,
         "schema": {
-          "type": "reference",
-          "target": "Page"
+          "target": "User_Collection",
+          "type": "reference"
         }
       },
-      "arguments": {
-        "Notion-Version": {
-          "in": "header",
-          "schema": {
-            "type": "string"
-          }
-        },
-        "page_id": {
-          "in": "path",
-          "schema": {
-            "type": "string"
-          }
-        }
-      },
+      "security": [],
+      "stability": 1,
       "throws": [
         {
           "code": 999,
           "schema": {
-            "type": "reference",
-            "target": "Error"
+            "target": "Error",
+            "type": "reference"
           }
         }
-      ],
-      "description": "Retrieves a Page object using the ID specified.",
-      "stability": 1,
-      "security": [],
-      "authorization": true
+      ]
     },
-    "page.create": {
-      "path": "/v1/pages",
-      "method": "POST",
+    "user.getMe": {
+      "arguments": {
+        "Notion-Version": {
+          "description": "The API version to use for this request. The latest version is 2026-03-11.",
+          "in": "header",
+          "schema": {
+            "default": "2026-03-11",
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves the bot User associated with the API token provided in the authorization header.",
+      "method": "GET",
+      "path": "/users/me",
       "return": {
         "code": 200,
         "schema": {
-          "type": "reference",
-          "target": "Page"
+          "target": "User",
+          "type": "reference"
         }
       },
-      "arguments": {
-        "Notion-Version": {
-          "in": "header",
-          "schema": {
-            "type": "string"
-          }
-        },
-        "payload": {
-          "in": "body",
-          "schema": {
-            "type": "reference",
-            "target": "Page"
-          }
-        }
-      },
+      "security": [],
+      "stability": 1,
       "throws": [
         {
           "code": 999,
           "schema": {
-            "type": "reference",
-            "target": "Error"
+            "target": "Error",
+            "type": "reference"
           }
         }
-      ],
-      "description": "Creates a new page that is a child of an existing page or database.",
-      "stability": 1,
-      "security": [],
-      "authorization": true
+      ]
     }
   },
-  "definitions": {
-    "Block": {
-      "type": "struct",
-      "base": true,
-      "properties": {
-        "object": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "parent": {
-          "type": "reference",
-          "target": "Parent_Id"
-        },
-        "type": {
-          "type": "string"
-        },
-        "created_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "created_by": {
-          "type": "reference",
-          "target": "User"
-        },
-        "last_edited_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "last_edited_by": {
-          "type": "reference",
-          "target": "User"
-        },
-        "archived": {
-          "description": "The archived status of the block",
-          "type": "boolean"
-        },
-        "in_trash": {
-          "description": "Whether the block has been deleted",
-          "type": "boolean"
-        },
-        "has_children": {
-          "description": "Whether or not the block has children blocks nested within it",
-          "type": "boolean"
-        }
-      },
-      "discriminator": "type",
-      "mapping": {
-        "Block_Bookmark": "bookmark",
-        "Block_Breadcrumb": "breadcrumb",
-        "Block_Bulleted_List_Item": "bulleted_list_item",
-        "Block_Callout": "callout",
-        "Block_Child_Database": "child_database",
-        "Block_Child_Page": "child_page",
-        "Block_Code": "code",
-        "Block_Divider": "divider",
-        "Block_Embed": "embed",
-        "Block_Equation": "equation",
-        "Block_File": "file",
-        "Block_Heading_One": "heading_1",
-        "Block_Heading_Two": "heading_2",
-        "Block_Heading_Three": "heading_3",
-        "Block_Image": "image",
-        "Block_Link_Preview": "link_preview",
-        "Block_Numbered_List_Item": "numbered_list_item",
-        "Block_Paragraph": "paragraph",
-        "Block_PDF": "pdf",
-        "Block_Quote": "quote"
-      }
-    },
-    "Block_Bookmark": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "bookmark": {
-          "type": "reference",
-          "target": "Bookmark"
-        }
-      }
-    },
-    "Block_Breadcrumb": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      }
-    },
-    "Block_Bulleted_List_Item": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "bulleted_list_item": {
-          "type": "reference",
-          "target": "Bulleted_List_Item"
-        }
-      }
-    },
-    "Block_Callout": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "callout": {
-          "type": "reference",
-          "target": "Callout"
-        }
-      }
-    },
-    "Block_Child_Database": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "child_database": {
-          "type": "reference",
-          "target": "Child_Database"
-        }
-      }
-    },
-    "Block_Child_Page": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "child_page": {
-          "type": "reference",
-          "target": "Child_Page"
-        }
-      }
-    },
-    "Block_Code": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "code": {
-          "type": "reference",
-          "target": "Code"
-        }
-      }
-    },
-    "Block_Divider": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      }
-    },
-    "Block_Embed": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      }
-    },
-    "Block_Equation": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "equation": {
-          "type": "reference",
-          "target": "Equation"
-        }
-      }
-    },
-    "Block_File": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "file": {
-          "type": "reference",
-          "target": "File"
-        }
-      }
-    },
-    "Block_Heading_One": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "heading_1": {
-          "type": "reference",
-          "target": "Heading"
-        }
-      }
-    },
-    "Block_Heading_Three": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "heading_3": {
-          "type": "reference",
-          "target": "Heading"
-        }
-      }
-    },
-    "Block_Heading_Two": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "heading_2": {
-          "type": "reference",
-          "target": "Heading"
-        }
-      }
-    },
-    "Block_Image": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "image": {
-          "type": "reference",
-          "target": "File_Object"
-        }
-      }
-    },
-    "Block_Link_Preview": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "link_preview": {
-          "type": "reference",
-          "target": "Link_Preview"
-        }
-      }
-    },
-    "Block_Numbered_List_Item": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "numbered_list_item": {
-          "type": "reference",
-          "target": "Numbered_List_Item"
-        }
-      }
-    },
-    "Block_PDF": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "pdf": {
-          "type": "reference",
-          "target": "PDF"
-        }
-      }
-    },
-    "Block_Paragraph": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "paragraph": {
-          "type": "reference",
-          "target": "Paragraph"
-        }
-      }
-    },
-    "Block_Parent_Id": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Parent_Id"
-      },
-      "properties": {
-        "block_id": {
-          "type": "string"
-        }
-      }
-    },
-    "Block_Quote": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Block"
-      },
-      "properties": {
-        "quote": {
-          "type": "reference",
-          "target": "Quote"
-        }
-      }
-    },
-    "Bookmark": {
-      "type": "struct",
-      "properties": {
-        "caption": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "Bulleted_List_Item": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "color": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Block"
-          }
-        }
-      }
-    },
-    "Callout": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "icon": {
-          "type": "reference",
-          "target": "Icon"
-        },
-        "color": {
-          "type": "string"
-        }
-      }
-    },
-    "Child_Database": {
-      "type": "struct",
-      "properties": {
-        "title": {
-          "type": "string"
-        }
-      }
-    },
-    "Child_Page": {
-      "type": "struct",
-      "properties": {
-        "title": {
-          "type": "string"
-        }
-      }
-    },
-    "Code": {
-      "type": "struct",
-      "properties": {
-        "caption": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "language": {
-          "type": "string"
-        }
-      }
-    },
-    "Comment": {
-      "type": "struct",
-      "properties": {
-        "parent": {
-          "type": "reference",
-          "target": "Parent_Id"
-        },
-        "discussion_id": {
-          "type": "string"
-        },
-        "rich_text": {
-          "type": "reference",
-          "target": "Rich_Text"
-        }
-      }
-    },
-    "Database": {
-      "type": "struct",
-      "properties": {
-        "object": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "created_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "last_edited_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "icon": {
-          "type": "reference",
-          "target": "Database_Icon"
-        },
-        "cover": {
-          "type": "reference",
-          "target": "Database_Cover"
-        },
-        "url": {
-          "type": "string"
-        },
-        "title": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Database_Title"
-          }
-        },
-        "description": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Database_Title"
-          }
-        }
-      }
-    },
-    "Database_Annotations": {
-      "type": "struct",
-      "properties": {
-        "bold": {
-          "type": "boolean"
-        },
-        "italic": {
-          "type": "boolean"
-        },
-        "strikethrough": {
-          "type": "boolean"
-        },
-        "underline": {
-          "type": "boolean"
-        },
-        "code": {
-          "type": "boolean"
-        },
-        "color": {
-          "type": "string"
-        }
-      }
-    },
-    "Database_Cover": {
-      "type": "struct",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "external": {
-          "type": "reference",
-          "target": "External_Object"
-        }
-      }
-    },
-    "Database_Icon": {
-      "type": "struct",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "emoji": {
-          "type": "string"
-        }
-      }
-    },
-    "Database_Parent_Id": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Parent_Id"
-      },
-      "properties": {
-        "database_id": {
-          "type": "string"
-        }
-      }
-    },
-    "Database_Text": {
-      "type": "struct",
-      "properties": {
-        "content": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        }
-      }
-    },
-    "Database_Title": {
-      "type": "struct",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "text": {
-          "type": "string"
-        },
-        "annotations": {
-          "type": "reference",
-          "target": "Database_Annotations"
-        },
-        "plain_text": {
-          "type": "string"
-        },
-        "href": {
-          "type": "string"
-        }
-      }
-    },
-    "Embed": {
-      "type": "struct",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "Emoji_Icon": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Icon"
-      },
-      "properties": {
-        "emoji": {
-          "type": "string"
-        }
-      }
-    },
-    "Equation": {
-      "type": "struct",
-      "properties": {
-        "expression": {
-          "type": "string"
-        }
-      }
-    },
-    "Error": {
-      "type": "struct",
-      "properties": {
-        "code": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "External_Icon": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Icon"
-      },
-      "properties": {
-        "external": {
-          "type": "reference",
-          "target": "External_Object"
-        }
-      }
-    },
-    "External_Object": {
-      "type": "struct",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "File": {
-      "type": "struct",
-      "properties": {
-        "caption": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "file": {
-          "type": "reference",
-          "target": "File_Object"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "File_Icon": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Icon"
-      },
-      "properties": {
-        "file": {
-          "type": "reference",
-          "target": "File_Object"
-        }
-      }
-    },
-    "File_Object": {
-      "type": "struct",
-      "properties": {
-        "url": {
-          "type": "string"
-        },
-        "expiry_time": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "Heading": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "color": {
-          "type": "string"
-        },
-        "is_toggleable": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Icon": {
-      "type": "struct",
-      "base": true,
-      "properties": {
-        "type": {
-          "type": "string"
-        }
-      },
-      "discriminator": "type",
-      "mapping": {
-        "Emoji_Icon": "emoji",
-        "File_Icon": "file",
-        "External_Icon": "external"
-      }
-    },
-    "Link": {
-      "type": "struct",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "Link_Preview": {
-      "type": "struct",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "Numbered_List_Item": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "color": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Block"
-          }
-        }
-      }
-    },
-    "PDF": {
-      "type": "struct",
-      "base": true,
-      "properties": {
-        "caption": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "discriminator": "type",
-      "mapping": {
-        "PDF_External": "external",
-        "PDF_File": "file"
-      }
-    },
-    "PDF_External": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "PDF"
-      },
-      "properties": {
-        "external": {
-          "type": "reference",
-          "target": "External_Object"
-        }
-      }
-    },
-    "PDF_File": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "PDF"
-      },
-      "properties": {
-        "file": {
-          "type": "reference",
-          "target": "File_Object"
-        }
-      }
-    },
-    "Page": {
-      "type": "struct",
-      "properties": {
-        "object": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "created_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "last_edited_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "created_by": {
-          "type": "reference",
-          "target": "User"
-        },
-        "last_edited_by": {
-          "type": "reference",
-          "target": "User"
-        },
-        "cover": {
-          "type": "reference",
-          "target": "File_Object"
-        },
-        "icon": {
-          "type": "reference",
-          "target": "Icon"
-        },
-        "in_trash": {
-          "type": "boolean"
-        },
-        "properties": {
-          "type": "map",
-          "schema": {
-            "type": "any"
-          }
-        },
-        "parent": {
-          "type": "reference",
-          "target": "Parent_Id"
-        },
-        "url": {
-          "type": "string"
-        },
-        "public_url": {
-          "type": "string"
-        }
-      }
-    },
-    "Page_Parent_Id": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Parent_Id"
-      },
-      "properties": {
-        "page_id": {
-          "type": "string"
-        }
-      }
-    },
-    "Paragraph": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "color": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Block"
-          }
-        }
-      }
-    },
-    "Parent_Id": {
-      "type": "struct",
-      "base": true,
-      "properties": {
-        "type": {
-          "type": "string"
-        }
-      },
-      "discriminator": "type",
-      "mapping": {
-        "Database_Parent_Id": "database_id",
-        "Page_Parent_Id": "page_id",
-        "Block_Parent_Id": "block_id",
-        "Workspace_Parent_Id": "workspace"
-      }
-    },
-    "Person": {
-      "type": "struct",
-      "properties": {
-        "email": {
-          "type": "string"
-        }
-      }
-    },
-    "Quote": {
-      "type": "struct",
-      "properties": {
-        "rich_text": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Rich_Text"
-          }
-        },
-        "color": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "Block"
-          }
-        }
-      }
-    },
-    "Rich_Text": {
-      "type": "struct",
-      "base": true,
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "annotations": {
-          "type": "reference",
-          "target": "Rich_Text_Annotation"
-        },
-        "plain_text": {
-          "type": "string"
-        },
-        "href": {
-          "type": "string"
-        }
-      },
-      "discriminator": "type",
-      "mapping": {
-        "Rich_Text_Equation": "equation",
-        "Rich_Text_Text": "text"
-      }
-    },
-    "Rich_Text_Annotation": {
-      "type": "struct",
-      "properties": {
-        "bold": {
-          "type": "boolean"
-        },
-        "italic": {
-          "type": "boolean"
-        },
-        "strikethrough": {
-          "type": "boolean"
-        },
-        "underline": {
-          "type": "boolean"
-        },
-        "code": {
-          "type": "boolean"
-        },
-        "color": {
-          "type": "string"
-        }
-      }
-    },
-    "Rich_Text_Equation": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Rich_Text"
-      },
-      "properties": {
-        "equation": {
-          "type": "reference",
-          "target": "Equation"
-        }
-      }
-    },
-    "Rich_Text_Text": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Rich_Text"
-      },
-      "properties": {
-        "text": {
-          "type": "reference",
-          "target": "Text"
-        }
-      }
-    },
-    "Text": {
-      "type": "struct",
-      "properties": {
-        "content": {
-          "type": "string"
-        },
-        "link": {
-          "type": "reference",
-          "target": "Link"
-        }
-      }
-    },
-    "User": {
-      "type": "struct",
-      "properties": {
-        "object": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "person": {
-          "type": "reference",
-          "target": "Person"
-        },
-        "name": {
-          "type": "string"
-        },
-        "avatar_url": {
-          "type": "string"
-        }
-      }
-    },
-    "User_Collection": {
-      "type": "struct",
-      "properties": {
-        "results": {
-          "type": "array",
-          "schema": {
-            "type": "reference",
-            "target": "User"
-          }
-        },
-        "next_cursor": {
-          "type": "string"
-        },
-        "has_more": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Workspace_Parent_Id": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Parent_Id"
-      },
-      "properties": {
-        "workspace": {
-          "type": "boolean"
-        }
-      }
-    }
+  "security": {
+    "type": "httpBearer"
   }
 }
