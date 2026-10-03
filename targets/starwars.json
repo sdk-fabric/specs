@@ -45,7 +45,7 @@
         }
       },
       "throws": [],
-      "description": "Get a specific people",
+      "description": "Get a specific person",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -497,7 +497,7 @@
           "format": "date-time"
         },
         "edited": {
-          "description": "The ISO 8601 date format of the time that this resource was edited. Search Fields:",
+          "description": "The ISO 8601 date format of the time that this resource was edited.",
           "type": "string",
           "format": "date-time"
         }
