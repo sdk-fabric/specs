@@ -121,7 +121,7 @@
           }
         }
       ],
-      "description": "Retrieves a database object \u2014 information that describes the structure and columns of a database \u2014 for a provided database ID. The response adheres to any limits to an integration\u2019s capabilities.",
+      "description": "Retrieves a database object — information that describes the structure and columns of a database — for a provided database ID.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -138,6 +138,12 @@
         }
       },
       "arguments": {
+        "Notion-Version": {
+          "in": "header",
+          "schema": {
+            "type": "string"
+          }
+        },
         "page_id": {
           "in": "path",
           "schema": {
@@ -171,6 +177,12 @@
         }
       },
       "arguments": {
+        "Notion-Version": {
+          "in": "header",
+          "schema": {
+            "type": "string"
+          }
+        },
         "payload": {
           "in": "body",
           "schema": {
@@ -197,44 +209,35 @@
   },
   "definitions": {
     "Block": {
-      "description": "",
       "type": "struct",
       "base": true,
       "properties": {
         "object": {
-          "description": "",
           "type": "string"
         },
         "id": {
-          "description": "",
           "type": "string"
         },
         "parent": {
-          "description": "",
           "type": "reference",
           "target": "Parent_Id"
         },
         "type": {
-          "description": "",
           "type": "string"
         },
         "created_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "created_by": {
-          "description": "",
           "type": "reference",
           "target": "User"
         },
         "last_edited_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "last_edited_by": {
-          "description": "",
           "type": "reference",
           "target": "User"
         },
@@ -264,10 +267,11 @@
         "Block_Embed": "embed",
         "Block_Equation": "equation",
         "Block_File": "file",
-        "Block_Heading_1": "heading_1",
-        "Block_Heading_2": "heading_2",
-        "Block_Heading_3": "heading_3",
+        "Block_Heading_One": "heading_1",
+        "Block_Heading_Two": "heading_2",
+        "Block_Heading_Three": "heading_3",
         "Block_Image": "image",
+        "Block_Link_Preview": "link_preview",
         "Block_Numbered_List_Item": "numbered_list_item",
         "Block_Paragraph": "paragraph",
         "Block_PDF": "pdf",
@@ -275,7 +279,6 @@
       }
     },
     "Block_Bookmark": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -283,14 +286,12 @@
       },
       "properties": {
         "bookmark": {
-          "description": "",
           "type": "reference",
           "target": "Bookmark"
         }
       }
     },
     "Block_Breadcrumb": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -298,7 +299,6 @@
       }
     },
     "Block_Bulleted_List_Item": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -306,14 +306,12 @@
       },
       "properties": {
         "bulleted_list_item": {
-          "description": "",
           "type": "reference",
           "target": "Bulleted_List_Item"
         }
       }
     },
     "Block_Callout": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -321,14 +319,12 @@
       },
       "properties": {
         "callout": {
-          "description": "",
           "type": "reference",
           "target": "Callout"
         }
       }
     },
     "Block_Child_Database": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -336,14 +332,12 @@
       },
       "properties": {
         "child_database": {
-          "description": "",
           "type": "reference",
           "target": "Child_Database"
         }
       }
     },
     "Block_Child_Page": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -351,14 +345,12 @@
       },
       "properties": {
         "child_page": {
-          "description": "",
           "type": "reference",
           "target": "Child_Page"
         }
       }
     },
     "Block_Code": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -366,14 +358,12 @@
       },
       "properties": {
         "code": {
-          "description": "",
           "type": "reference",
           "target": "Code"
         }
       }
     },
     "Block_Divider": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -381,7 +371,6 @@
       }
     },
     "Block_Embed": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -389,7 +378,6 @@
       }
     },
     "Block_Equation": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -397,14 +385,12 @@
       },
       "properties": {
         "equation": {
-          "description": "",
           "type": "reference",
           "target": "Equation"
         }
       }
     },
     "Block_File": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -412,14 +398,12 @@
       },
       "properties": {
         "file": {
-          "description": "",
           "type": "reference",
           "target": "File"
         }
       }
     },
     "Block_Heading_One": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -427,14 +411,12 @@
       },
       "properties": {
         "heading_1": {
-          "description": "",
           "type": "reference",
           "target": "Heading"
         }
       }
     },
     "Block_Heading_Three": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -442,14 +424,12 @@
       },
       "properties": {
         "heading_3": {
-          "description": "",
           "type": "reference",
-          "target": "Block_Heading_3"
+          "target": "Heading"
         }
       }
     },
     "Block_Heading_Two": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -457,14 +437,12 @@
       },
       "properties": {
         "heading_2": {
-          "description": "",
           "type": "reference",
-          "target": "Block_Heading_2"
+          "target": "Heading"
         }
       }
     },
     "Block_Image": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -472,25 +450,25 @@
       },
       "properties": {
         "image": {
-          "description": "",
           "type": "reference",
           "target": "File_Object"
         }
       }
     },
     "Block_Link_Preview": {
-      "description": "",
       "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Block"
+      },
       "properties": {
         "link_preview": {
-          "description": "",
           "type": "reference",
           "target": "Link_Preview"
         }
       }
     },
     "Block_Numbered_List_Item": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -498,14 +476,12 @@
       },
       "properties": {
         "numbered_list_item": {
-          "description": "",
           "type": "reference",
           "target": "Numbered_List_Item"
         }
       }
     },
     "Block_PDF": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -513,14 +489,12 @@
       },
       "properties": {
         "pdf": {
-          "description": "",
           "type": "reference",
           "target": "PDF"
         }
       }
     },
     "Block_Paragraph": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -528,14 +502,12 @@
       },
       "properties": {
         "paragraph": {
-          "description": "",
           "type": "reference",
           "target": "Paragraph"
         }
       }
     },
     "Block_Parent_Id": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -543,13 +515,11 @@
       },
       "properties": {
         "block_id": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Block_Quote": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -557,18 +527,15 @@
       },
       "properties": {
         "quote": {
-          "description": "",
           "type": "reference",
           "target": "Quote"
         }
       }
     },
     "Bookmark": {
-      "description": "",
       "type": "struct",
       "properties": {
         "caption": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -576,29 +543,24 @@
           }
         },
         "url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Bulleted_List_Item": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
-            "target": "Bulleted_List_Item"
+            "target": "Rich_Text"
           }
         },
         "color": {
-          "description": "",
           "type": "string"
         },
         "children": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -608,11 +570,9 @@
       }
     },
     "Callout": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -620,42 +580,34 @@
           }
         },
         "icon": {
-          "description": "",
           "type": "reference",
           "target": "Icon"
         },
         "color": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Child_Database": {
-      "description": "",
       "type": "struct",
       "properties": {
         "title": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Child_Page": {
-      "description": "",
       "type": "struct",
       "properties": {
         "title": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Code": {
-      "description": "",
       "type": "struct",
       "properties": {
         "caption": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -663,7 +615,6 @@
           }
         },
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -671,69 +622,55 @@
           }
         },
         "language": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Comment": {
-      "description": "",
       "type": "struct",
       "properties": {
         "parent": {
-          "description": "",
           "type": "reference",
           "target": "Parent_Id"
         },
         "discussion_id": {
-          "description": "",
           "type": "string"
         },
         "rich_text": {
-          "description": "",
           "type": "reference",
           "target": "Rich_Text"
         }
       }
     },
     "Database": {
-      "description": "",
       "type": "struct",
       "properties": {
         "object": {
-          "description": "",
           "type": "string"
         },
         "id": {
-          "description": "",
           "type": "string"
         },
         "created_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "last_edited_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "icon": {
-          "description": "",
           "type": "reference",
           "target": "Database_Icon"
         },
         "cover": {
-          "description": "",
           "type": "reference",
           "target": "Database_Cover"
         },
         "url": {
-          "description": "",
           "type": "string"
         },
         "title": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -741,7 +678,6 @@
           }
         },
         "description": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -751,65 +687,52 @@
       }
     },
     "Database_Annotations": {
-      "description": "",
       "type": "struct",
       "properties": {
         "bold": {
-          "description": "",
           "type": "boolean"
         },
         "italic": {
-          "description": "",
           "type": "boolean"
         },
         "strikethrough": {
-          "description": "",
           "type": "boolean"
         },
         "underline": {
-          "description": "",
           "type": "boolean"
         },
         "code": {
-          "description": "",
           "type": "boolean"
         },
         "color": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Database_Cover": {
-      "description": "",
       "type": "struct",
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         },
         "external": {
-          "description": "",
-          "type": "any"
+          "type": "reference",
+          "target": "External_Object"
         }
       }
     },
     "Database_Icon": {
-      "description": "",
       "type": "struct",
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         },
         "emoji": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Database_Parent_Id": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -817,64 +740,51 @@
       },
       "properties": {
         "database_id": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Database_Text": {
-      "description": "",
       "type": "struct",
       "properties": {
         "content": {
-          "description": "",
           "type": "string"
         },
         "link": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Database_Title": {
-      "description": "",
       "type": "struct",
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         },
         "text": {
-          "description": "",
           "type": "string"
         },
         "annotations": {
-          "description": "",
           "type": "reference",
           "target": "Database_Annotations"
         },
         "plain_text": {
-          "description": "",
           "type": "string"
         },
         "href": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Embed": {
-      "description": "",
       "type": "struct",
       "properties": {
         "url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Emoji_Icon": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -882,37 +792,30 @@
       },
       "properties": {
         "emoji": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Equation": {
-      "description": "",
       "type": "struct",
       "properties": {
         "expression": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Error": {
-      "description": "",
       "type": "struct",
       "properties": {
         "code": {
-          "description": "",
           "type": "string"
         },
         "message": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "External_Icon": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -920,28 +823,23 @@
       },
       "properties": {
         "external": {
-          "description": "",
           "type": "reference",
           "target": "External_Object"
         }
       }
     },
     "External_Object": {
-      "description": "",
       "type": "struct",
       "properties": {
         "url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "File": {
-      "description": "",
       "type": "struct",
       "properties": {
         "caption": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -949,18 +847,15 @@
           }
         },
         "file": {
-          "description": "",
           "type": "reference",
           "target": "File_Object"
         },
         "name": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "File_Icon": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -968,33 +863,27 @@
       },
       "properties": {
         "file": {
-          "description": "",
           "type": "reference",
           "target": "File_Object"
         }
       }
     },
     "File_Object": {
-      "description": "",
       "type": "struct",
       "properties": {
         "url": {
-          "description": "",
           "type": "string"
         },
         "expiry_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         }
       }
     },
     "Heading": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1002,22 +891,18 @@
           }
         },
         "color": {
-          "description": "",
           "type": "string"
         },
         "is_toggleable": {
-          "description": "",
           "type": "boolean"
         }
       }
     },
     "Icon": {
-      "description": "",
       "type": "struct",
       "base": true,
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         }
       },
@@ -1029,31 +914,25 @@
       }
     },
     "Link": {
-      "description": "",
       "type": "struct",
       "properties": {
         "url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Link_Preview": {
-      "description": "",
       "type": "struct",
       "properties": {
         "url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Numbered_List_Item": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1061,11 +940,9 @@
           }
         },
         "color": {
-          "description": "",
           "type": "string"
         },
         "children": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1075,12 +952,10 @@
       }
     },
     "PDF": {
-      "description": "",
       "type": "struct",
       "base": true,
       "properties": {
         "caption": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1088,7 +963,6 @@
           }
         },
         "type": {
-          "description": "",
           "type": "string"
         }
       },
@@ -1099,7 +973,6 @@
       }
     },
     "PDF_External": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1107,14 +980,12 @@
       },
       "properties": {
         "external": {
-          "description": "",
           "type": "reference",
           "target": "External_Object"
         }
       }
     },
     "PDF_File": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1122,82 +993,66 @@
       },
       "properties": {
         "file": {
-          "description": "",
           "type": "reference",
           "target": "File_Object"
         }
       }
     },
     "Page": {
-      "description": "",
       "type": "struct",
       "properties": {
         "object": {
-          "description": "",
           "type": "string"
         },
         "id": {
-          "description": "",
           "type": "string"
         },
         "created_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "last_edited_time": {
-          "description": "",
           "type": "string",
           "format": "date-time"
         },
         "created_by": {
-          "description": "",
           "type": "reference",
           "target": "User"
         },
         "last_edited_by": {
-          "description": "",
           "type": "reference",
           "target": "User"
         },
         "cover": {
-          "description": "",
           "type": "reference",
           "target": "File_Object"
         },
         "icon": {
-          "description": "",
           "type": "reference",
           "target": "Icon"
         },
         "in_trash": {
-          "description": "",
           "type": "boolean"
         },
         "properties": {
-          "description": "",
           "type": "map",
           "schema": {
             "type": "any"
           }
         },
         "parent": {
-          "description": "",
           "type": "reference",
           "target": "Parent_Id"
         },
         "url": {
-          "description": "",
           "type": "string"
         },
         "public_url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Page_Parent_Id": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1205,17 +1060,14 @@
       },
       "properties": {
         "page_id": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Paragraph": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1223,11 +1075,9 @@
           }
         },
         "color": {
-          "description": "",
           "type": "string"
         },
         "children": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1237,12 +1087,10 @@
       }
     },
     "Parent_Id": {
-      "description": "",
       "type": "struct",
       "base": true,
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         }
       },
@@ -1255,21 +1103,17 @@
       }
     },
     "Person": {
-      "description": "",
       "type": "struct",
       "properties": {
         "email": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Quote": {
-      "description": "",
       "type": "struct",
       "properties": {
         "rich_text": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1277,11 +1121,9 @@
           }
         },
         "color": {
-          "description": "",
           "type": "string"
         },
         "children": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1291,25 +1133,20 @@
       }
     },
     "Rich_Text": {
-      "description": "",
       "type": "struct",
       "base": true,
       "properties": {
         "type": {
-          "description": "",
           "type": "string"
         },
         "annotations": {
-          "description": "",
           "type": "reference",
           "target": "Rich_Text_Annotation"
         },
         "plain_text": {
-          "description": "",
           "type": "string"
         },
         "href": {
-          "description": "",
           "type": "string"
         }
       },
@@ -1320,37 +1157,29 @@
       }
     },
     "Rich_Text_Annotation": {
-      "description": "",
       "type": "struct",
       "properties": {
         "bold": {
-          "description": "",
           "type": "boolean"
         },
         "italic": {
-          "description": "",
           "type": "boolean"
         },
         "strikethrough": {
-          "description": "",
           "type": "boolean"
         },
         "underline": {
-          "description": "",
           "type": "boolean"
         },
         "code": {
-          "description": "",
           "type": "boolean"
         },
         "color": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "Rich_Text_Equation": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1358,14 +1187,12 @@
       },
       "properties": {
         "equation": {
-          "description": "",
           "type": "reference",
           "target": "Equation"
         }
       }
     },
     "Rich_Text_Text": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1373,64 +1200,51 @@
       },
       "properties": {
         "text": {
-          "description": "",
           "type": "reference",
           "target": "Text"
         }
       }
     },
     "Text": {
-      "description": "",
       "type": "struct",
       "properties": {
         "content": {
-          "description": "",
           "type": "string"
         },
         "link": {
-          "description": "",
           "type": "reference",
           "target": "Link"
         }
       }
     },
     "User": {
-      "description": "",
       "type": "struct",
       "properties": {
         "object": {
-          "description": "",
           "type": "string"
         },
         "id": {
-          "description": "",
           "type": "string"
         },
         "type": {
-          "description": "",
           "type": "string"
         },
         "person": {
-          "description": "",
           "type": "reference",
           "target": "Person"
         },
         "name": {
-          "description": "",
           "type": "string"
         },
         "avatar_url": {
-          "description": "",
           "type": "string"
         }
       }
     },
     "User_Collection": {
-      "description": "",
       "type": "struct",
       "properties": {
         "results": {
-          "description": "",
           "type": "array",
           "schema": {
             "type": "reference",
@@ -1438,17 +1252,14 @@
           }
         },
         "next_cursor": {
-          "description": "",
           "type": "string"
         },
         "has_more": {
-          "description": "",
           "type": "boolean"
         }
       }
     },
     "Workspace_Parent_Id": {
-      "description": "",
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -1456,7 +1267,6 @@
       },
       "properties": {
         "workspace": {
-          "description": "",
           "type": "boolean"
         }
       }

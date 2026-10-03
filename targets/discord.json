@@ -71,7 +71,7 @@
           }
         }
       ],
-      "description": "Update a channel's settings. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters.",
+      "description": "Update a channel's settings. Returns a channel object on success.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -104,7 +104,7 @@
           }
         }
       ],
-      "description": "Delete a channel, or close a private message. Requires the MANAGE_CHANNELS permission for the guild, or MANAGE_THREADS if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id removed and a Channel Update Gateway event will fire for each of them. Returns a channel object on success. Fires a Channel Delete Gateway event (or Thread Delete if the channel was a thread).",
+      "description": "Delete a channel, or close a private message.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -119,7 +119,7 @@
           "type": "array",
           "schema": {
             "type": "reference",
-            "target": "Message"
+            "target": "Message_Response"
           }
         }
       },
@@ -153,7 +153,7 @@
         "code": 200,
         "schema": {
           "type": "reference",
-          "target": "Channel_Invite"
+          "target": "Invite"
         }
       },
       "arguments": {
@@ -167,7 +167,7 @@
           "in": "body",
           "schema": {
             "type": "reference",
-            "target": "Channel_Invite"
+            "target": "Channel_Invite_Create"
           }
         }
       },
@@ -180,7 +180,160 @@
           }
         }
       ],
-      "description": "Create a new invite object for the channel. Only usable for guild channels. Requires the CREATE_INSTANT_INVITE permission. All JSON parameters for this route are optional, however the request body is not. If you are not sending any fields, you still have to send an empty JSON object ({}). Returns an invite object. Fires an Invite Create Gateway event.",
+      "description": "Create a new invite object for the channel. Only usable for guild channels.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "guild.get": {
+      "path": "/guilds/:guild_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Guild"
+        }
+      },
+      "arguments": {
+        "guild_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns the guild object for the given id.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "guild.getChannels": {
+      "path": "/guilds/:guild_id/channels",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Channel"
+          }
+        }
+      },
+      "arguments": {
+        "guild_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a list of guild channel objects.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "guild.getMembers": {
+      "path": "/guilds/:guild_id/members",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Guild_Member"
+          }
+        }
+      },
+      "arguments": {
+        "guild_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "after": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a list of guild member objects that are members of the guild.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "guild.getRoles": {
+      "path": "/guilds/:guild_id/roles",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Role"
+          }
+        }
+      },
+      "arguments": {
+        "guild_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a list of role objects for the guild.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -195,7 +348,7 @@
           "type": "array",
           "schema": {
             "type": "reference",
-            "target": "Message"
+            "target": "Message_Response"
           }
         }
       },
@@ -253,7 +406,7 @@
         "code": 200,
         "schema": {
           "type": "reference",
-          "target": "Message"
+          "target": "Message_Response"
         }
       },
       "arguments": {
@@ -279,7 +432,7 @@
           }
         }
       ],
-      "description": "Retrieves a specific message in the channel. Returns a message object on success.",
+      "description": "Retrieves a specific message in the channel.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -292,7 +445,7 @@
         "code": 200,
         "schema": {
           "type": "reference",
-          "target": "Message"
+          "target": "Message_Response"
         }
       },
       "arguments": {
@@ -306,7 +459,7 @@
           "in": "body",
           "schema": {
             "type": "reference",
-            "target": "Message"
+            "target": "Message_Create"
           }
         }
       },
@@ -319,7 +472,7 @@
           }
         }
       ],
-      "description": "Post a message to a guild text or DM channel. Returns a message object. Fires a Message Create Gateway event. See message formatting for more information on how to properly format messages.",
+      "description": "Post a message to a guild text or DM channel.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -332,7 +485,7 @@
         "code": 200,
         "schema": {
           "type": "reference",
-          "target": "Message"
+          "target": "Message_Response"
         }
       },
       "arguments": {
@@ -352,7 +505,7 @@
           "in": "body",
           "schema": {
             "type": "reference",
-            "target": "Message"
+            "target": "Message_Update"
           }
         }
       },
@@ -365,7 +518,7 @@
           }
         }
       ],
-      "description": "Edit a previously sent message. The fields content, embeds, and flags can be edited by the original message author. Other users can only edit flags and only if they have the MANAGE_MESSAGES permission in the corresponding channel. When specifying flags, ensure to include all previously set flags/bits in addition to ones that you are modifying. Only flags documented in the table below may be modified by users (unsupported flag changes are currently ignored without error).",
+      "description": "Edit a previously sent message.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -403,7 +556,7 @@
           }
         }
       ],
-      "description": "Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user, this endpoint requires the MANAGE_MESSAGES permission.",
+      "description": "Delete a message.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -416,7 +569,7 @@
         "code": 200,
         "schema": {
           "type": "reference",
-          "target": "Message"
+          "target": "Message_Response"
         }
       },
       "arguments": {
@@ -442,7 +595,95 @@
           }
         }
       ],
-      "description": "Crosspost a message in an Announcement Channel to following channels. This endpoint requires the SEND_MESSAGES permission, if the current user sent the message, or additionally the MANAGE_MESSAGES permission, for all other messages, to be present for the current user.",
+      "description": "Crosspost a message in an Announcement Channel to following channels.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.addReaction": {
+      "path": "/channels/:channel_id/messages/:message_id/reactions/:emoji/@me",
+      "method": "PUT",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "emoji": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Create a reaction for the message with the specified emoji.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.deleteOwnReaction": {
+      "path": "/channels/:channel_id/messages/:message_id/reactions/:emoji/@me",
+      "method": "DELETE",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "emoji": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Delete a reaction the current user has made for the specified emoji.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -508,7 +749,7 @@
           }
         }
       ],
-      "description": "",
+      "description": "Get a list of users that reacted with the specified emoji.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -546,7 +787,7 @@
           }
         }
       ],
-      "description": "",
+      "description": "Deletes all reactions on a message.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -572,7 +813,36 @@
           }
         }
       ],
-      "description": "Returns the user object of the requester's account. For OAuth2, this requires the identify scope, which will return the object without an email, and optionally the email scope, which returns the object with an email.",
+      "description": "Returns the user object of the requester's account.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getGuilds": {
+      "path": "/users/@me/guilds",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Guild"
+          }
+        }
+      },
+      "arguments": [],
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a list of partial guild objects the current user is a member of.",
       "stability": 1,
       "security": [],
       "authorization": true,
@@ -614,230 +884,405 @@
   },
   "definitions": {
     "Channel": {
-      "description": "",
+      "description": "Represents a Discord guild or DM channel.",
       "type": "struct",
       "properties": {
         "id": {
-          "description": "",
+          "description": "The id of this channel",
           "type": "string"
         },
         "type": {
-          "description": "",
+          "description": "The type of channel",
           "type": "integer"
         },
         "guild_id": {
-          "description": "",
+          "description": "The id of the guild (may be missing for DM channels)",
           "type": "string"
         },
         "position": {
-          "description": "",
+          "description": "Sorting position of the channel",
           "type": "integer"
         },
         "name": {
-          "description": "",
+          "description": "The name of the channel (1-100 characters)",
           "type": "string"
         },
         "topic": {
-          "description": "",
+          "description": "The channel topic (0-4096 characters)",
           "type": "string"
         },
         "nsfw": {
-          "description": "",
+          "description": "Whether the channel is nsfw",
           "type": "boolean"
         },
         "last_message_id": {
-          "description": "",
+          "description": "The id of the last message sent in this channel",
           "type": "string"
         },
         "bitrate": {
-          "description": "",
+          "description": "The bitrate (in bits) of the voice channel",
           "type": "integer"
         },
         "user_limit": {
-          "description": "",
+          "description": "The user limit of the voice channel",
           "type": "integer"
         },
         "rate_limit_per_user": {
-          "description": "",
+          "description": "Amount of seconds a user has to wait before sending another message",
           "type": "integer"
         },
         "icon": {
-          "description": "",
+          "description": "Icon hash",
           "type": "string"
         },
         "owner_id": {
-          "description": "",
+          "description": "Id of the creator of the channel",
           "type": "string"
         },
         "application_id": {
-          "description": "",
+          "description": "Application id of the group DM creator if it was bot-created",
           "type": "string"
         },
         "managed": {
-          "description": "",
+          "description": "Whether the channel is managed by an application",
           "type": "boolean"
         },
         "parent_id": {
-          "description": "",
+          "description": "For guild channels: id of the parent category",
           "type": "string"
         },
         "last_pin_timestamp": {
-          "description": "",
+          "description": "When the last pinned message was pinned",
           "type": "string"
         },
         "rtc_region": {
-          "description": "",
+          "description": "Voice region id for the voice channel",
           "type": "string"
         },
         "video_quality_mode": {
-          "description": "",
+          "description": "The camera video quality mode of the voice channel",
           "type": "integer"
         },
         "message_count": {
-          "description": "",
+          "description": "Number of messages in a thread channel",
           "type": "integer"
         },
         "member_count": {
-          "description": "",
+          "description": "An approximate count of users in a thread channel",
           "type": "integer"
         },
         "default_auto_archive_duration": {
-          "description": "",
+          "description": "Default duration for newly created threads to automatically archive",
           "type": "integer"
         },
         "permissions": {
-          "description": "",
+          "description": "Computed permissions for the invoking user in the channel",
           "type": "string"
         },
         "flags": {
-          "description": "",
+          "description": "Channel flags",
           "type": "integer"
         },
         "total_message_sent": {
-          "description": "",
+          "description": "Number of messages ever sent in a thread",
           "type": "integer"
         },
         "default_sort_order": {
-          "description": "",
+          "description": "The default sort order type used to order posts in forum channels",
           "type": "integer"
         },
         "default_forum_layout": {
-          "description": "",
+          "description": "The default forum layout view used to display posts in forum channels",
           "type": "integer"
         }
       }
     },
-    "Channel_Invite": {
-      "description": "",
+    "Channel_Invite_Create": {
+      "description": "Request body for creating a channel invite.",
       "type": "struct",
       "properties": {
         "max_age": {
-          "description": "",
+          "description": "Duration of invite in seconds before expiry, or 0 for never. Default 86400 (24 hours)",
           "type": "integer"
         },
         "max_uses": {
-          "description": "",
+          "description": "Max number of uses or 0 for unlimited. Default 0",
           "type": "integer"
         },
         "temporary": {
-          "description": "",
+          "description": "Whether this invite only grants temporary membership. Default false",
           "type": "boolean"
         },
         "unique": {
-          "description": "",
+          "description": "If true, don't try to reuse a similar invite. Default false",
           "type": "boolean"
         },
         "target_type": {
-          "description": "",
+          "description": "The type of target for this voice channel invite",
           "type": "integer"
         },
         "target_user_id": {
-          "description": "",
+          "description": "The id of the user whose stream to display for this invite",
           "type": "string"
         },
         "target_application_id": {
-          "description": "",
+          "description": "The id of the embedded application to open for this invite",
           "type": "string"
         }
       }
     },
     "Channel_Update": {
-      "description": "",
+      "description": "Request body for updating a channel.",
       "type": "struct",
       "properties": {
         "name": {
           "description": "1-100 character channel name",
           "type": "string"
         },
+        "type": {
+          "description": "The type of channel",
+          "type": "integer"
+        },
+        "position": {
+          "description": "The position of the channel in the left-hand listing",
+          "type": "integer"
+        },
+        "topic": {
+          "description": "0-1024 character channel topic",
+          "type": "string"
+        },
+        "nsfw": {
+          "description": "Whether the channel is nsfw",
+          "type": "boolean"
+        },
+        "rate_limit_per_user": {
+          "description": "Amount of seconds a user has to wait before sending another message",
+          "type": "integer"
+        },
+        "bitrate": {
+          "description": "The bitrate (in bits) of the voice channel",
+          "type": "integer"
+        },
+        "user_limit": {
+          "description": "The user limit of the voice channel",
+          "type": "integer"
+        },
+        "parent_id": {
+          "description": "Parent category channel id",
+          "type": "string"
+        },
         "icon": {
-          "description": "base64 encoded icon",
+          "description": "Base64 encoded icon",
           "type": "string"
         }
       }
     },
     "Error": {
-      "description": "",
+      "description": "Standard Discord error object.",
       "type": "struct",
       "properties": {
         "code": {
-          "description": "",
+          "description": "Discord internal error code",
           "type": "integer"
         },
         "message": {
-          "description": "",
+          "description": "Human readable error message",
           "type": "string"
         },
         "errors": {
-          "description": "",
+          "description": "Validation errors breakdown",
           "type": "any"
         }
       }
     },
-    "Message": {
-      "description": "",
+    "Guild": {
+      "description": "Represents a Discord guild (server).",
       "type": "struct",
       "properties": {
-        "content": {
-          "description": "Message contents (up to 2000 characters)",
+        "id": {
+          "description": "Guild id",
           "type": "string"
         },
-        "nonce": {
-          "description": "Can be used to verify a message was sent (up to 25 characters)",
+        "name": {
+          "description": "Guild name (2-100 characters)",
           "type": "string"
         },
-        "tts": {
-          "description": "true if this is a TTS message",
-          "type": "boolean"
+        "icon": {
+          "description": "Icon hash",
+          "type": "string"
         },
-        "embeds": {
-          "description": "Up to 10 rich embeds (up to 6000 characters)",
+        "owner_id": {
+          "description": "Id of owner",
+          "type": "string"
+        },
+        "afk_channel_id": {
+          "description": "Id of afk channel",
+          "type": "string"
+        },
+        "afk_timeout": {
+          "description": "Afk timeout in seconds",
+          "type": "integer"
+        },
+        "verification_level": {
+          "description": "Verification level required for the guild",
+          "type": "integer"
+        },
+        "default_message_notifications": {
+          "description": "Default message notifications level",
+          "type": "integer"
+        },
+        "explicit_content_filter": {
+          "description": "Explicit content filter level",
+          "type": "integer"
+        },
+        "roles": {
+          "description": "Roles in the guild",
           "type": "array",
           "schema": {
             "type": "reference",
-            "target": "Message_Embed"
+            "target": "Role"
           }
         },
-        "allowed_mentions": {
-          "description": "",
-          "type": "reference",
-          "target": "Message_Allowed_Mentions"
-        },
-        "message_reference": {
-          "description": "",
-          "type": "string"
-        },
-        "flags": {
-          "description": "",
+        "mfa_level": {
+          "description": "Required MFA level for the guild",
           "type": "integer"
         },
-        "enforce_nonce": {
-          "description": "",
+        "system_channel_id": {
+          "description": "The id of the channel where guild notices are posted",
+          "type": "string"
+        },
+        "vanity_url_code": {
+          "description": "The vanity url code for the guild",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description for the guild",
+          "type": "string"
+        },
+        "banner": {
+          "description": "Banner hash",
+          "type": "string"
+        },
+        "premium_tier": {
+          "description": "Premium tier (Server Boost level)",
+          "type": "integer"
+        },
+        "premium_subscription_count": {
+          "description": "The number of boosts this guild currently has",
+          "type": "integer"
+        },
+        "preferred_locale": {
+          "description": "The preferred locale of a guild",
+          "type": "string"
+        }
+      }
+    },
+    "Guild_Member": {
+      "description": "Represents a member of a Discord guild.",
+      "type": "struct",
+      "properties": {
+        "user": {
+          "description": "The user this guild member represents",
+          "type": "reference",
+          "target": "User"
+        },
+        "nick": {
+          "description": "This user's guild nickname",
+          "type": "string"
+        },
+        "avatar": {
+          "description": "The member's guild avatar hash",
+          "type": "string"
+        },
+        "roles": {
+          "description": "Array of role object IDs",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "joined_at": {
+          "description": "When the user joined the guild",
+          "type": "string"
+        },
+        "premium_since": {
+          "description": "When the user started boosting the guild",
+          "type": "string"
+        },
+        "deaf": {
+          "description": "Whether the user is deafened in voice channels",
           "type": "boolean"
+        },
+        "mute": {
+          "description": "Whether the user is muted in voice channels",
+          "type": "boolean"
+        },
+        "flags": {
+          "description": "Guild member flags",
+          "type": "integer"
+        },
+        "pending": {
+          "description": "Whether the user has not yet passed the guild's Membership Screening requirements",
+          "type": "boolean"
+        },
+        "permissions": {
+          "description": "Total permissions of the member in the channel, including overwrites",
+          "type": "string"
+        },
+        "communication_disabled_until": {
+          "description": "When the user's timeout will expire and the user will be able to communicate again",
+          "type": "string"
+        }
+      }
+    },
+    "Invite": {
+      "description": "Represents a code that when used, adds a user to a guild or group DM.",
+      "type": "struct",
+      "properties": {
+        "code": {
+          "description": "The invite code (unique ID)",
+          "type": "string"
+        },
+        "guild": {
+          "description": "The guild this invite is for",
+          "type": "reference",
+          "target": "Guild"
+        },
+        "channel": {
+          "description": "The channel this invite is for",
+          "type": "reference",
+          "target": "Channel"
+        },
+        "inviter": {
+          "description": "The user who created the invite",
+          "type": "reference",
+          "target": "User"
+        },
+        "target_user": {
+          "description": "The user whose stream to display for this invite",
+          "type": "reference",
+          "target": "User"
+        },
+        "target_type": {
+          "description": "The type of target for this voice channel invite",
+          "type": "integer"
+        },
+        "approximate_presence_count": {
+          "description": "Approximate count of online members",
+          "type": "integer"
+        },
+        "approximate_member_count": {
+          "description": "Approximate count of total members",
+          "type": "integer"
+        },
+        "expires_at": {
+          "description": "The expiration date of this invite",
+          "type": "string"
         }
       }
     },
     "Message_Allowed_Mentions": {
-      "description": "",
+      "description": "Allowed mentions object for messages.",
       "type": "struct",
       "properties": {
         "parse": {
@@ -867,8 +1312,52 @@
         }
       }
     },
+    "Message_Create": {
+      "description": "Request body for posting a message.",
+      "type": "struct",
+      "properties": {
+        "content": {
+          "description": "Message contents (up to 2000 characters)",
+          "type": "string"
+        },
+        "nonce": {
+          "description": "Can be used to verify a message was sent (up to 25 characters)",
+          "type": "string"
+        },
+        "tts": {
+          "description": "true if this is a TTS message",
+          "type": "boolean"
+        },
+        "embeds": {
+          "description": "Up to 10 rich embeds (up to 6000 characters)",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message_Embed"
+          }
+        },
+        "allowed_mentions": {
+          "description": "Allowed mentions for the message",
+          "type": "reference",
+          "target": "Message_Allowed_Mentions"
+        },
+        "message_reference": {
+          "description": "Include to send a message as a reply",
+          "type": "reference",
+          "target": "Message_Reference"
+        },
+        "flags": {
+          "description": "Message flags combined as a bitfield",
+          "type": "integer"
+        },
+        "enforce_nonce": {
+          "description": "If true, enforces nonce uniqueness",
+          "type": "boolean"
+        }
+      }
+    },
     "Message_Embed": {
-      "description": "",
+      "description": "Embed object for messages.",
       "type": "struct",
       "properties": {
         "title": {
@@ -898,7 +1387,7 @@
       }
     },
     "Message_Reference": {
-      "description": "",
+      "description": "Reference object for message replies.",
       "type": "struct",
       "properties": {
         "message_id": {
@@ -919,72 +1408,217 @@
         }
       }
     },
-    "User": {
-      "description": "",
+    "Message_Response": {
+      "description": "Represents a message returned by the Discord API.",
       "type": "struct",
       "properties": {
         "id": {
-          "description": "",
+          "description": "Id of the message",
+          "type": "string"
+        },
+        "channel_id": {
+          "description": "Id of the channel the message was sent in",
+          "type": "string"
+        },
+        "author": {
+          "description": "The author of this message",
+          "type": "reference",
+          "target": "User"
+        },
+        "content": {
+          "description": "Contents of the message",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "When this message was sent",
+          "type": "string"
+        },
+        "edited_timestamp": {
+          "description": "When this message was edited (or null if never)",
+          "type": "string"
+        },
+        "tts": {
+          "description": "Whether this was a TTS message",
+          "type": "boolean"
+        },
+        "mention_everyone": {
+          "description": "Whether this message mentions @everyone",
+          "type": "boolean"
+        },
+        "mentions": {
+          "description": "Users specifically mentioned in the message",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "User"
+          }
+        },
+        "embeds": {
+          "description": "Any embedded content",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message_Embed"
+          }
+        },
+        "pinned": {
+          "description": "Whether this message is pinned",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "Type of message",
+          "type": "integer"
+        },
+        "flags": {
+          "description": "Message flags combined as a bitfield",
+          "type": "integer"
+        },
+        "message_reference": {
+          "description": "Reference data if the message is a reply",
+          "type": "reference",
+          "target": "Message_Reference"
+        }
+      }
+    },
+    "Message_Update": {
+      "description": "Request body for editing a message.",
+      "type": "struct",
+      "properties": {
+        "content": {
+          "description": "Message contents (up to 2000 characters)",
+          "type": "string"
+        },
+        "embeds": {
+          "description": "Up to 10 rich embeds",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message_Embed"
+          }
+        },
+        "flags": {
+          "description": "Message flags combined as a bitfield",
+          "type": "integer"
+        },
+        "allowed_mentions": {
+          "description": "Allowed mentions object",
+          "type": "reference",
+          "target": "Message_Allowed_Mentions"
+        }
+      }
+    },
+    "Role": {
+      "description": "Represents a role in a guild.",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "Role id",
+          "type": "string"
+        },
+        "name": {
+          "description": "Role name",
+          "type": "string"
+        },
+        "color": {
+          "description": "Integer representation of hexadecimal color code",
+          "type": "integer"
+        },
+        "hoist": {
+          "description": "If this role is pinned in the user listing",
+          "type": "boolean"
+        },
+        "icon": {
+          "description": "Role icon hash",
+          "type": "string"
+        },
+        "unicode_emoji": {
+          "description": "Role unicode emoji",
+          "type": "string"
+        },
+        "position": {
+          "description": "Position of this role",
+          "type": "integer"
+        },
+        "permissions": {
+          "description": "Permission bit set representation",
+          "type": "string"
+        },
+        "managed": {
+          "description": "Whether this role is managed by an integration",
+          "type": "boolean"
+        },
+        "mentionable": {
+          "description": "Whether this role is mentionable",
+          "type": "boolean"
+        }
+      }
+    },
+    "User": {
+      "description": "Represents a Discord user.",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "The user's id",
           "type": "string"
         },
         "username": {
-          "description": "",
+          "description": "The user's username, not unique across the platform",
           "type": "string"
         },
         "discriminator": {
-          "description": "",
+          "description": "The user's 4-digit discord-tag",
           "type": "string"
         },
         "global_name": {
-          "description": "",
+          "description": "The user's display name, if it is set",
           "type": "string"
         },
         "avatar": {
-          "description": "",
+          "description": "The user's avatar hash",
           "type": "string"
         },
         "bot": {
-          "description": "",
+          "description": "Whether the user belongs to an OAuth2 application",
           "type": "boolean"
         },
         "system": {
-          "description": "",
+          "description": "Whether the user is an Official Discord System user",
           "type": "boolean"
         },
         "mfa_enabled": {
-          "description": "",
+          "description": "Whether the user has two factor enabled on their account",
           "type": "boolean"
         },
         "banner": {
-          "description": "",
+          "description": "The user's banner hash",
           "type": "string"
         },
         "accent_color": {
-          "description": "",
+          "description": "The user's banner color encoded as an integer representation of hexadecimal color code",
           "type": "integer"
         },
         "locale": {
-          "description": "",
+          "description": "The user's chosen language option",
           "type": "string"
         },
         "verified": {
-          "description": "",
+          "description": "Whether the email on this account has been verified",
           "type": "boolean"
         },
         "email": {
-          "description": "",
+          "description": "The user's email",
           "type": "string"
         },
         "flags": {
-          "description": "",
+          "description": "The flags on a user's account",
           "type": "integer"
         },
         "premium_type": {
-          "description": "",
+          "description": "The type of Nitro subscription on a user's account",
           "type": "integer"
         },
         "public_flags": {
-          "description": "",
+          "description": "The public flags on a user's account",
           "type": "integer"
         }
       }
