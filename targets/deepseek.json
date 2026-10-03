@@ -127,7 +127,7 @@
       "security": [],
       "authorization": true
     },
-    "user.get_balance": {
+    "user.getBalance": {
       "path": "/user/balance",
       "method": "GET",
       "return": {
