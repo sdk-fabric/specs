@@ -14,7 +14,7 @@
           "target": "User"
         }
       },
-      "arguments": [],
+      "arguments": {},
       "throws": [
         {
           "code": 999,
@@ -27,8 +27,7 @@
       "description": "Retrieve the user's ID. For OAuth access tokens, the scopes associated with the token used are also returned.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.getAll": {
       "path": "/v0/:baseId/:tableIdOrName",
@@ -138,8 +137,7 @@
       "description": "List records in a table. Note that table names and table ids can be used interchangeably. We recommend using table IDs so you don't need to modify your API request when your table name changes.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.get": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId",
@@ -183,8 +181,7 @@
       "description": "Retrieve a single record. Any \"empty\" fields (e.g. \"\", [], or false) in the record will not be returned.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.create": {
       "path": "/v0/:baseId/:tableIdOrName",
@@ -229,8 +226,7 @@
       "description": "Creates multiple records. Note that table names and table ids can be used interchangeably.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.replace": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId",
@@ -281,8 +277,7 @@
       "description": "Updates a single record by replacing all fields. Table names and table IDs can be used interchangeably.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.replaceAll": {
       "path": "/v0/:baseId/:tableIdOrName",
@@ -327,8 +322,7 @@
       "description": "Updates up to 10 records, or upserts them when performUpsert is set.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.update": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId",
@@ -379,8 +373,7 @@
       "description": "Updates a single record partially. Table names and table IDs can be used interchangeably.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.updateAll": {
       "path": "/v0/:baseId/:tableIdOrName",
@@ -425,8 +418,7 @@
       "description": "Updates up to 10 records partially, or upserts them when performUpsert is set.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "records.delete": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId",
@@ -470,8 +462,7 @@
       "description": "Deletes a single record.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "fields.create": {
       "path": "/v0/meta/bases/:baseId/tables/:tableId/fields",
@@ -516,8 +507,7 @@
       "description": "Creates a new column and returns the schema for the newly created column.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "fields.update": {
       "path": "/v0/meta/bases/:baseId/tables/:tableId/fields/:columnId",
@@ -568,8 +558,7 @@
       "description": "Updates the name and/or description of a field.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tables.create": {
       "path": "/v0/meta/bases/:baseId/tables",
@@ -608,8 +597,7 @@
       "description": "Creates a new table and returns the schema for the newly created table.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tables.update": {
       "path": "/v0/meta/bases/:baseId/tables/:tableIdOrName",
@@ -654,8 +642,7 @@
       "description": "Updates the name and/or description of a table.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "comments.getAll": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId/comments",
@@ -699,8 +686,7 @@
       "description": "Returns a list of comments for the record from newest to oldest.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "comments.create": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId/comments",
@@ -751,8 +737,7 @@
       "description": "Creates a comment on a record.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "comments.update": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId/comments/:rowCommentId",
@@ -809,8 +794,7 @@
       "description": "Updates a comment on a record. API users can only update comments they created.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "comments.delete": {
       "path": "/v0/:baseId/:tableIdOrName/:recordId/comments/:rowCommentId",
@@ -860,8 +844,7 @@
       "description": "Deletes a comment from a record.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     }
   },
   "definitions": {
