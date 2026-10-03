@@ -47,8 +47,7 @@
       "description": "Returns a variety of information about the Tweet specified by the requested ID or list of IDs.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tweet.get": {
       "path": "/2/tweets/:tweet_id",
@@ -93,8 +92,7 @@
       "description": "Returns a variety of information about a single Tweet specified by the requested ID.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tweet.create": {
       "path": "/2/tweets",
@@ -127,8 +125,7 @@
       "description": "Creates a Tweet on behalf of an authenticated user.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tweet.delete": {
       "path": "/2/tweets/:tweet_id",
@@ -160,8 +157,7 @@
       "description": "Allows a user or authenticated user ID to delete a Tweet.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tweet.hideReply": {
       "path": "/2/tweets/:tweet_id/hidden",
@@ -200,8 +196,7 @@
       "description": "Hides or unhides a reply to a Tweet.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "tweet.getLikingUsers": {
       "path": "/2/tweets/:tweet_id/liking_users",
@@ -248,11 +243,10 @@
           }
         }
       ],
-      "description": "Allows you to get information about a Tweet\u2019s liking users.",
+      "description": "Allows you to get information about a Tweet’s liking users.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "usage.getTweets": {
       "path": "/2/usage/tweets",
@@ -264,7 +258,7 @@
           "target": "Tweet_Usage_Response"
         }
       },
-      "arguments": [],
+      "arguments": {},
       "throws": [
         {
           "code": 999,
@@ -277,8 +271,7 @@
       "description": "The Usage API in the Twitter API v2 allows developers to programmatically retrieve their project usage. Using thie endpoint, developers can keep a track and monitor of the number of Tweets they have pulled for a given billing cycle.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.getAll": {
       "path": "/2/users",
@@ -323,8 +316,7 @@
       "description": "Returns a variety of information about one or more users specified by the requested IDs.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.get": {
       "path": "/2/users/:user_id",
@@ -369,8 +361,7 @@
       "description": "Returns a variety of information about a single user specified by the requested ID.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.getTimeline": {
       "path": "/2/users/:user_id/timelines/reverse_chronological",
@@ -428,8 +419,7 @@
       "description": "Allows you to retrieve a collection of the most recent Tweets and Retweets posted by you and users you follow. This endpoint can return every Tweet created on a timeline over the last 7 days as well as the most recent 800 regardless of creation date.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.getLikedTweets": {
       "path": "/2/users/:user_id/liked_tweets",
@@ -486,8 +476,7 @@
       "description": "Tweets liked by a user",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.removeLike": {
       "path": "/2/users/:user_id/likes/:tweet_id",
@@ -525,8 +514,7 @@
       "description": "Allows a user or authenticated user ID to unlike a Tweet.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.createLike": {
       "path": "/2/users/:user_id/likes",
@@ -565,8 +553,7 @@
       "description": "Causes the user ID identified in the path parameter to Like the target Tweet.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.findByName": {
       "path": "/2/users/by",
@@ -611,8 +598,7 @@
       "description": "Returns a variety of information about one or more users specified by their usernames.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.getMe": {
       "path": "/2/users/me",
@@ -650,8 +636,7 @@
       "description": "Returns information about an authorized user.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "bookmark.getAll": {
       "path": "/2/users/:user_id/bookmarks",
@@ -702,8 +687,7 @@
       "description": "Allows you to get an authenticated user's 800 most recent bookmarked Tweets.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "bookmark.create": {
       "path": "/2/users/:user_id/bookmarks",
@@ -742,8 +726,7 @@
       "description": "",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "bookmark.delete": {
       "path": "/2/users/:user_id/bookmarks/:tweet_id",
@@ -781,8 +764,7 @@
       "description": "",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "search.getRecent": {
       "path": "/2/tweets/search/recent",
@@ -840,8 +822,7 @@
       "description": "",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "quote.getAll": {
       "path": "/2/tweets/:tweet_id/quote_tweets",
@@ -904,8 +885,7 @@
       "description": "Returns Quote Tweets for a Tweet specified by the requested Tweet ID.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "trends.getByWoeid": {
       "path": "/2/trends/by/woeid/:woeid",
@@ -937,8 +917,7 @@
       "description": "The Trends lookup endpoint allow developers to get the Trends for a location, specified using the where-on-earth id (WOEID).",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "retweet.getAll": {
       "path": "/2/tweets/:tweet_id/retweets",
@@ -989,8 +968,7 @@
       "description": "Returns the Retweets for a given Tweet ID.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     }
   },
   "definitions": {
@@ -1224,7 +1202,7 @@
           "target": "Tweet_Reply"
         },
         "reply_settings": {
-          "description": "Settings to indicate who can reply to the Tweet. Options include \"mentionedUsers\" and \"following\". If the field isn\u2019t specified, it will default to everyone.",
+          "description": "Settings to indicate who can reply to the Tweet. Options include \"mentionedUsers\" and \"following\". If the field isn’t specified, it will default to everyone.",
           "type": "string"
         },
         "text": {

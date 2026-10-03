@@ -23,8 +23,7 @@
       "description": "Get all the people",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "people.get": {
       "path": "/people/:id",
@@ -48,8 +47,7 @@
       "description": "Get a specific person",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "film.getAll": {
       "path": "/films",
@@ -73,8 +71,7 @@
       "description": "Get all the films",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "film.get": {
       "path": "/films/:id",
@@ -98,8 +95,7 @@
       "description": "Get a specific film",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "starship.getAll": {
       "path": "/starships",
@@ -123,8 +119,7 @@
       "description": "Get all the starships",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "starship.get": {
       "path": "/starships/:id",
@@ -148,8 +143,7 @@
       "description": "Get a specific starship",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "species.getAll": {
       "path": "/species",
@@ -173,8 +167,7 @@
       "description": "Get all the species",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "species.get": {
       "path": "/species/:id",
@@ -198,8 +191,7 @@
       "description": "Get a specific species",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "vehicle.getAll": {
       "path": "/vehicles",
@@ -223,8 +215,7 @@
       "description": "Get all the vehicles",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "vehicle.get": {
       "path": "/vehicles/:id",
@@ -248,8 +239,7 @@
       "description": "Get a specific vehicle",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "planet.getAll": {
       "path": "/planets",
@@ -273,8 +263,7 @@
       "description": "Get all the planets",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "planet.get": {
       "path": "/planets/:id",
@@ -298,8 +287,7 @@
       "description": "Get a specific planet",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     }
   },
   "definitions": {

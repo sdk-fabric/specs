@@ -46,8 +46,7 @@
       "description": "Returns a paginated list of Users for the workspace. The response may contain fewer than page_size of results.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "user.get": {
       "path": "/v1/users/:user_id",
@@ -85,8 +84,7 @@
       "description": "Retrieves a User using the ID specified.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "database.get": {
       "path": "/v1/databases/:database_id",
@@ -124,8 +122,7 @@
       "description": "Retrieves a database object — information that describes the structure and columns of a database — for a provided database ID.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "page.get": {
       "path": "/v1/pages/:page_id",
@@ -163,8 +160,7 @@
       "description": "Retrieves a Page object using the ID specified.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     },
     "page.create": {
       "path": "/v1/pages",
@@ -203,8 +199,7 @@
       "description": "Creates a new page that is a child of an existing page or database.",
       "stability": 1,
       "security": [],
-      "authorization": true,
-      "tags": []
+      "authorization": true
     }
   },
   "definitions": {
