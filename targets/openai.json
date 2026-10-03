@@ -1,0 +1,1191 @@
+{
+  "baseUrl": "https://api.openai.com",
+  "security": {
+    "type": "httpBearer"
+  },
+  "operations": {
+    "completions.create": {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Completion_Response"
+        }
+      },
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Request"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Creates a model response for the given chat conversation.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "completions.delete": {
+      "path": "/v1/chat/completions/:completion_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Completion_Deleted"
+        }
+      },
+      "arguments": {
+        "completion_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Delete a stored chat completion. Only Chat Completions that have been created with the store parameter set to true can be deleted.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "completions.getAll": {
+      "path": "/v1/chat/completions",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Completion_Collection"
+        }
+      },
+      "arguments": {
+        "after": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "model": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "order": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "List stored Chat Completions. Only Chat Completions that have been stored with the store parameter set to true will be returned.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "responses.create": {
+      "path": "/v1/responses",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Response_Response"
+        }
+      },
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Request"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Creates a model response. Provide text or image inputs to generate text or JSON outputs. Have the model call your own custom code or use built-in tools like web search or file search to use your own data as input for the model's response.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    }
+  },
+  "definitions": {
+    "Completion_Choice": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "index": {
+          "description": "",
+          "type": "integer"
+        },
+        "message": {
+          "description": "",
+          "type": "reference",
+          "target": "Completion_Message"
+        },
+        "finish_reason": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Collection": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "object": {
+          "description": "The type of this object. It is always set to \"list\".",
+          "type": "string"
+        },
+        "data": {
+          "description": "An array of chat completion objects.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Response"
+          }
+        },
+        "first_id": {
+          "description": "The identifier of the first chat completion in the data array.",
+          "type": "string"
+        },
+        "last_id": {
+          "description": "The identifier of the last chat completion in the data array.",
+          "type": "string"
+        },
+        "has_more": {
+          "description": "Indicates whether there are more Chat Completions available.",
+          "type": "boolean"
+        }
+      }
+    },
+    "Completion_Deleted": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "object": {
+          "description": "",
+          "type": "string"
+        },
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "deleted": {
+          "description": "",
+          "type": "boolean"
+        }
+      }
+    },
+    "Completion_Message": {
+      "description": "",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "role": {
+          "description": "",
+          "type": "string"
+        },
+        "content": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "discriminator": "role",
+      "mapping": {
+        "Completion_Message_Developer": "developer",
+        "Completion_Message_System": "system",
+        "Completion_Message_User": "user",
+        "Completion_Message_Assistant": "assistant",
+        "Completion_Message_Tool": "tool"
+      }
+    },
+    "Completion_Message_Assistant": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Message"
+      },
+      "properties": {
+        "audio": {
+          "description": "",
+          "type": "string"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "refusal": {
+          "description": "",
+          "type": "string"
+        },
+        "tool_calls": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Completion_Message_Developer": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Message"
+      },
+      "properties": {
+        "name": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Message_System": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Message"
+      },
+      "properties": {
+        "name": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Message_Tool": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Message"
+      },
+      "properties": {
+        "tool_call_id": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Message_User": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Completion_Message"
+      },
+      "properties": {
+        "name": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Request": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "model": {
+          "description": "Model ID used to generate the response, like gpt-4o or o1. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the model guide to browse and compare available models.",
+          "type": "string"
+        },
+        "messages": {
+          "description": "A list of messages comprising the conversation so far. Depending on the model you use, different message types (modalities) are supported, like text, images, and audio.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Message"
+          }
+        },
+        "frequency_penalty": {
+          "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.",
+          "type": "number"
+        },
+        "logit_bias": {
+          "description": "Modify the likelihood of specified tokens appearing in the completion.",
+          "type": "map",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "logprobs": {
+          "description": "Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message.",
+          "type": "boolean"
+        },
+        "max_completion_tokens": {
+          "description": "An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and reasoning tokens.",
+          "type": "integer"
+        },
+        "metadata": {
+          "description": "Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.",
+          "type": "map",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "presence_penalty": {
+          "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.",
+          "type": "number"
+        },
+        "reasoning_effort": {
+          "description": "Constrains effort on reasoning for reasoning models. Currently supported values are low, medium, and high. Reducing reasoning effort can result in faster responses and fewer tokens used on reasoning in a response.",
+          "type": "string"
+        },
+        "seed": {
+          "description": "This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result. Determinism is not guaranteed, and you should refer to the system_fingerprint response parameter to monitor changes in the backend.",
+          "type": "integer"
+        },
+        "service_tier": {
+          "description": "Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service",
+          "type": "string"
+        },
+        "stop": {
+          "description": "Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "store": {
+          "description": "Whether or not to store the output of this chat completion request for use in our model distillation or evals products.",
+          "type": "boolean"
+        },
+        "temperature": {
+          "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. We generally recommend altering this or top_p but not both.",
+          "type": "number"
+        },
+        "top_logprobs": {
+          "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.",
+          "type": "integer"
+        },
+        "top_p": {
+          "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.",
+          "type": "number"
+        },
+        "user": {
+          "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "object": {
+          "description": "",
+          "type": "string"
+        },
+        "created": {
+          "description": "",
+          "type": "integer"
+        },
+        "model": {
+          "description": "",
+          "type": "string"
+        },
+        "choices": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Completion_Choice"
+          }
+        },
+        "usage": {
+          "description": "",
+          "type": "reference",
+          "target": "Completion_Usage"
+        },
+        "service_tier": {
+          "description": "",
+          "type": "string"
+        },
+        "system_fingerprint": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Completion_Tokens_Details": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "accepted_prediction_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "audio_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "reasoning_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "rejected_prediction_tokens": {
+          "description": "",
+          "type": "integer"
+        }
+      }
+    },
+    "Completion_Usage": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "completion_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "completion_tokens_details": {
+          "description": "",
+          "type": "reference",
+          "target": "Completion_Tokens_Details"
+        },
+        "prompt_tokens_details": {
+          "description": "",
+          "type": "reference",
+          "target": "Prompt_Tokens_Details"
+        }
+      }
+    },
+    "Error": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "error": {
+          "description": "",
+          "type": "reference",
+          "target": "Error_Detail"
+        }
+      }
+    },
+    "Error_Detail": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "",
+          "type": "string"
+        },
+        "message": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Prompt_Tokens_Details": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "audio_tokens": {
+          "description": "",
+          "type": "integer"
+        },
+        "cached_tokens": {
+          "description": "",
+          "type": "integer"
+        }
+      }
+    },
+    "Response_MCP_Tool": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "input_schema": {
+          "description": "The JSON schema describing the tool's input.",
+          "nullable": true,
+          "type": "any"
+        },
+        "name": {
+          "description": "The name of the tool.",
+          "nullable": true,
+          "type": "string"
+        },
+        "annotations": {
+          "description": "Additional annotations about the tool.",
+          "nullable": true,
+          "type": "map",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "description": "The description of the tool.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Prompt": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "The unique identifier of the prompt template to use.",
+          "type": "string"
+        },
+        "variables": {
+          "description": "Optional map of values to substitute in for variables in your prompt. The substitution values can either be strings, or other Response input types like images or files.",
+          "type": "map",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "Optional version of the prompt template.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Reasoning": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "effort": {
+          "description": "Constrains effort on reasoning for reasoning models. Currently supported values are minimal, low, medium, and high. Reducing reasoning effort can result in faster responses and fewer tokens used on reasoning in a response.  Note: The gpt-5-pro model defaults to (and only supports) high reasoning effort.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "A summary of the reasoning performed by the model. This can be useful for debugging and understanding the model's reasoning process. One of auto, concise, or detailed.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Request": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "background": {
+          "description": "Whether to run the model response in the background.",
+          "type": "boolean"
+        },
+        "conversation": {
+          "description": "The conversation that this response belongs to. Items from this conversation are prepended to input_items for this response request. Input items and output items from this response are automatically added to this conversation after this response completes.",
+          "nullable": true,
+          "type": "string"
+        },
+        "include": {
+          "description": "Specify additional output data to include in the model response.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "input": {
+          "description": "Text, image, or file inputs to the model, used to generate a response.",
+          "nullable": true,
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Request_Input"
+          }
+        },
+        "instructions": {
+          "description": "A system (or developer) message inserted into the model's context.  When using along with previous_response_id, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
+          "type": "string"
+        },
+        "max_output_tokens": {
+          "description": "An upper bound for the number of tokens that can be generated for a response, including visible output tokens and reasoning tokens.",
+          "type": "string"
+        },
+        "max_tool_calls": {
+          "description": "The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.",
+          "type": "map",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "model": {
+          "description": "Model ID used to generate the response, like gpt-4o or o3. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the model guide to browse and compare available models.",
+          "type": "string"
+        },
+        "parallel_tool_calls": {
+          "description": "Whether to allow the model to run tool calls in parallel.",
+          "type": "boolean"
+        },
+        "previous_response_id": {
+          "description": "The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about conversation state. Cannot be used in conjunction with conversation.",
+          "type": "string"
+        },
+        "prompt": {
+          "description": "Reference to a prompt template and its variables.",
+          "type": "reference",
+          "target": "Response_Prompt"
+        },
+        "prompt_cache_key": {
+          "description": "Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the user field.",
+          "type": "string"
+        },
+        "reasoning": {
+          "description": "gpt-5 and o-series models only",
+          "type": "reference",
+          "target": "Response_Reasoning"
+        },
+        "safety_identifier": {
+          "description": "A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies. The IDs should be a string that uniquely identifies each user. We recommend hashing their username or email address, in order to avoid sending us any identifying information.",
+          "type": "string"
+        },
+        "service_tier": {
+          "description": "Specifies the processing type used for serving the request.",
+          "type": "string"
+        },
+        "store": {
+          "description": "Whether to store the generated model response for later retrieval via API.",
+          "type": "boolean"
+        },
+        "temperature": {
+          "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. We generally recommend altering this or top_p but not both.",
+          "type": "number"
+        },
+        "text": {
+          "description": "Configuration options for a text response from the model. Can be plain text or structured JSON data.",
+          "nullable": true,
+          "type": "reference",
+          "target": "Response_Request_Text"
+        },
+        "tool_choice": {
+          "description": "How the model should select which tool (or tools) to use when generating a response. See the tools parameter to see how to specify which tools the model can call.",
+          "type": "string"
+        },
+        "tools": {
+          "description": "An array of tools the model may call while generating a response. You can specify which tool to use by setting the tool_choice parameter.",
+          "nullable": true,
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Request_Tool"
+          }
+        },
+        "top_logprobs": {
+          "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability.",
+          "type": "integer"
+        },
+        "top_p": {
+          "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.  We generally recommend altering this or temperature but not both.",
+          "type": "number"
+        },
+        "truncation": {
+          "description": "The truncation strategy to use for the model response.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Request_Input": {
+      "description": "An item representing part of the context for the response to be generated by the model. Can contain text, images, and audio inputs, as well as previous assistant responses and tool call outputs.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Request_Input_FunctionCall": "function_call",
+        "Response_Request_Input_FunctionCallOutput": "function_call_output",
+        "Response_Request_Input_Message": "message"
+      }
+    },
+    "Response_Request_Input_FunctionCall": {
+      "description": "A tool call to run a function. See the function calling guide for more information.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Input"
+      },
+      "properties": {
+        "arguments": {
+          "description": "A JSON string of the arguments to pass to the function.",
+          "nullable": true,
+          "type": "string"
+        },
+        "call_id": {
+          "description": "The unique ID of the function tool call generated by the model.",
+          "nullable": true,
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the function to run.",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the function tool call. Always function_call.",
+          "nullable": true,
+          "type": "string",
+          "default": "function_call"
+        },
+        "id": {
+          "description": "The unique ID of the function tool call.",
+          "nullable": true,
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the item. One of in_progress, completed, or incomplete. Populated when items are returned via API.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Request_Input_FunctionCallOutput": {
+      "description": "The output of a function tool call.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Input"
+      },
+      "properties": {
+        "call_id": {
+          "description": "The unique ID of the function tool call generated by the model.",
+          "nullable": true,
+          "type": "string"
+        },
+        "output": {
+          "description": "Text, image, or file output of the function tool call.",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the function tool call output. Always function_call_output.",
+          "nullable": true,
+          "type": "string",
+          "default": "function_call_output"
+        },
+        "id": {
+          "description": "The unique ID of the function tool call output. Populated when this item is returned via API.",
+          "nullable": true,
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the item. One of in_progress, completed, or incomplete. Populated when items are returned via API.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Request_Input_McpListTools": {
+      "description": "A list of tools available on an MCP server.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Input"
+      },
+      "properties": {
+        "id": {
+          "description": "The unique ID of the list.",
+          "nullable": true,
+          "type": "string"
+        },
+        "server_label": {
+          "description": "The label of the MCP server.",
+          "nullable": true,
+          "type": "string"
+        },
+        "tools": {
+          "description": "The tools available on the server.",
+          "nullable": true,
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_MCP_Tool"
+          }
+        },
+        "error": {
+          "description": "Error message if the server could not list tools.",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the item. Always mcp_list_tools.",
+          "nullable": true,
+          "type": "string",
+          "default": "mcp_list_tools"
+        }
+      }
+    },
+    "Response_Request_Input_Message": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Input"
+      },
+      "properties": {
+        "content": {
+          "description": "Text, image, or audio input to the model, used to generate a response. Can also contain previous assistant responses.",
+          "nullable": true,
+          "type": "string"
+        },
+        "role": {
+          "description": "The role of the message input. One of user, assistant, system, or developer.",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the message input. Always message.",
+          "nullable": true,
+          "type": "string",
+          "default": "message"
+        }
+      }
+    },
+    "Response_Request_Text": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "format": {
+          "description": "An object specifying the format that the model must output.",
+          "nullable": true,
+          "type": "reference",
+          "target": "Response_Request_Text_Format"
+        },
+        "verbosity": {
+          "description": "Constrains the verbosity of the model's response. Lower values will result in more concise responses, while higher values will result in more verbose responses. Currently supported values are low, medium, and high.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Request_Text_Format": {
+      "description": "",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Request_Text_Format_JsonSchema": "json_schema",
+        "Response_Request_Text_Format_Text": "text"
+      }
+    },
+    "Response_Request_Text_Format_JsonSchema": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Text_Format"
+      },
+      "properties": {
+        "name": {
+          "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
+          "nullable": true,
+          "type": "string"
+        },
+        "schema": {
+          "description": "The schema for the response format, described as a JSON Schema object.",
+          "nullable": true,
+          "type": "any"
+        },
+        "type": {
+          "description": "The type of response format being defined. Always json_schema.",
+          "nullable": true,
+          "type": "string",
+          "default": "json_schema"
+        },
+        "description": {
+          "description": "A description of what the response format is for, used by the model to determine how to respond in the format.",
+          "nullable": true,
+          "type": "string"
+        },
+        "strict": {
+          "description": "Whether to enable strict schema adherence when generating the output.",
+          "nullable": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "Response_Request_Text_Format_Text": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Text_Format"
+      },
+      "properties": {
+        "type": {
+          "description": "The type of response format being defined. Always text.",
+          "nullable": true,
+          "type": "string",
+          "default": "text"
+        }
+      }
+    },
+    "Response_Request_Tool": {
+      "description": "",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Request_Tool_Function": "function"
+      }
+    },
+    "Response_Request_Tool_Function": {
+      "description": "Defines a function in your own code the model can choose to call.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Request_Tool"
+      },
+      "properties": {
+        "name": {
+          "description": "The name of the function to call.",
+          "nullable": true,
+          "type": "string"
+        },
+        "parameters": {
+          "description": "A JSON schema object describing the parameters of the function.",
+          "nullable": true,
+          "type": "any"
+        },
+        "strict": {
+          "description": "Whether to enforce strict parameter validation. Default true.",
+          "nullable": true,
+          "type": "boolean"
+        },
+        "type": {
+          "description": "The type of the function tool. Always function.",
+          "nullable": true,
+          "type": "string",
+          "default": "function"
+        },
+        "description": {
+          "description": "A description of the function. Used by the model to determine whether or not to call the function.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "created_at": {
+          "description": "Unix timestamp (in seconds) of when this Response was created.",
+          "type": "integer"
+        },
+        "error": {
+          "description": "An error object returned when the model fails to generate a Response.",
+          "type": "reference",
+          "target": "Response_Response_Error"
+        },
+        "id": {
+          "description": "Unique identifier for this Response.",
+          "type": "string"
+        },
+        "incomplete_details": {
+          "description": "Details about why the response is incomplete.",
+          "type": "string"
+        },
+        "object": {
+          "description": "The object type of this resource - always set to response.",
+          "nullable": true,
+          "type": "string",
+          "default": "response"
+        },
+        "output": {
+          "description": "An array of content items generated by the model.",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Response_Response_Output"
+          }
+        },
+        "previous_response_id": {
+          "description": "The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about conversation state. Cannot be used in conjunction with conversation.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Response_Error": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "code": {
+          "description": "The error code for the response.",
+          "type": "string"
+        },
+        "message": {
+          "description": "A human-readable description of the error.",
+          "type": "string"
+        }
+      }
+    },
+    "Response_Response_Output": {
+      "description": "",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Response_Response_Output_FunctionCall": "function_call",
+        "Response_Response_Output_Message": "message"
+      }
+    },
+    "Response_Response_Output_FunctionCall": {
+      "description": "",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Response_Output"
+      },
+      "properties": {
+        "arguments": {
+          "description": "A JSON string of the arguments to pass to the function.",
+          "nullable": true,
+          "type": "string"
+        },
+        "call_id": {
+          "description": "The unique ID of the function tool call generated by the model.",
+          "nullable": true,
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the function to run.",
+          "nullable": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the function tool call. Always function_call.",
+          "nullable": true,
+          "type": "string",
+          "default": "function_call"
+        },
+        "id": {
+          "description": "The unique ID of the function tool call.",
+          "nullable": true,
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the item. One of in_progress, completed, or incomplete. Populated when items are returned via API.",
+          "nullable": true,
+          "type": "string"
+        }
+      }
+    },
+    "Response_Response_Output_Message": {
+      "description": "An output message from the model.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Response_Response_Output"
+      },
+      "properties": {
+        "content": {
+          "description": "The content of the output message.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "The unique ID of the output message.",
+          "type": "string"
+        },
+        "role": {
+          "description": "The role of the output message. Always assistant.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the message input. One of in_progress, completed, or incomplete. Populated when input items are returned via API.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the output message. Always message.",
+          "nullable": true,
+          "type": "string",
+          "default": "message"
+        }
+      }
+    }
+  }
+}

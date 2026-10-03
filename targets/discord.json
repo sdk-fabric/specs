@@ -1,0 +1,993 @@
+{
+  "baseUrl": "https://discord.com/api/v10",
+  "security": {
+    "type": "httpBearer"
+  },
+  "operations": {
+    "channel.get": {
+      "path": "/channels/:channel_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Channel"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Get a channel by ID. Returns a channel object.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "channel.update": {
+      "path": "/channels/:channel_id",
+      "method": "PATCH",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Channel"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Channel_Update"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Update a channel's settings. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "channel.delete": {
+      "path": "/channels/:channel_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Channel"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Delete a channel, or close a private message. Requires the MANAGE_CHANNELS permission for the guild, or MANAGE_THREADS if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id removed and a Channel Update Gateway event will fire for each of them. Returns a channel object on success. Fires a Channel Delete Gateway event (or Thread Delete if the channel was a thread).",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "channel.getPins": {
+      "path": "/channels/:channel_id/pins",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message"
+          }
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns all pinned messages in the channel as an array of message objects.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "channel.createInvite": {
+      "path": "/channels/:channel_id/invites",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Channel_Invite"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Channel_Invite"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Create a new invite object for the channel. Only usable for guild channels. Requires the CREATE_INSTANT_INVITE permission. All JSON parameters for this route are optional, however the request body is not. If you are not sending any fields, you still have to send an empty JSON object ({}). Returns an invite object. Fires an Invite Create Gateway event.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.getAll": {
+      "path": "/channels/:channel_id/messages",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message"
+          }
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "around": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "before": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "after": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Retrieves the messages in a channel.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.get": {
+      "path": "/channels/:channel_id/messages/:message_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Message"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Retrieves a specific message in the channel. Returns a message object on success.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.create": {
+      "path": "/channels/:channel_id/messages",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Message"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Message"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Post a message to a guild text or DM channel. Returns a message object. Fires a Message Create Gateway event. See message formatting for more information on how to properly format messages.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.update": {
+      "path": "/channels/:channel_id/messages/:message_id",
+      "method": "PATCH",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Message"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Message"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Edit a previously sent message. The fields content, embeds, and flags can be edited by the original message author. Other users can only edit flags and only if they have the MANAGE_MESSAGES permission in the corresponding channel. When specifying flags, ensure to include all previously set flags/bits in addition to ones that you are modifying. Only flags documented in the table below may be modified by users (unsupported flag changes are currently ignored without error).",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.remove": {
+      "path": "/channels/:channel_id/messages/:message_id",
+      "method": "DELETE",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user, this endpoint requires the MANAGE_MESSAGES permission.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.crosspost": {
+      "path": "/channels/:channel_id/messages/:message_id/crosspost",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Message"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Crosspost a message in an Announcement Channel to following channels. This endpoint requires the SEND_MESSAGES permission, if the current user sent the message, or additionally the MANAGE_MESSAGES permission, for all other messages, to be present for the current user.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.getReactionsByEmoji": {
+      "path": "/channels/:channel_id/messages/:message_id/reactions/:emoji",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "User"
+          }
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "emoji": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "after": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "message.deleteAllReactions": {
+      "path": "/channels/:channel_id/messages/:message_id/reactions",
+      "method": "DELETE",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "arguments": {
+        "channel_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getCurrent": {
+      "path": "/users/@me",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User"
+        }
+      },
+      "arguments": [],
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns the user object of the requester's account. For OAuth2, this requires the identify scope, which will return the object without an email, and optionally the email scope, which returns the object with an email.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.get": {
+      "path": "/users/:user_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      ],
+      "description": "Returns a user object for a given user ID.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    }
+  },
+  "definitions": {
+    "Channel": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "type": {
+          "description": "",
+          "type": "integer"
+        },
+        "guild_id": {
+          "description": "",
+          "type": "string"
+        },
+        "position": {
+          "description": "",
+          "type": "integer"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "topic": {
+          "description": "",
+          "type": "string"
+        },
+        "nsfw": {
+          "description": "",
+          "type": "boolean"
+        },
+        "last_message_id": {
+          "description": "",
+          "type": "string"
+        },
+        "bitrate": {
+          "description": "",
+          "type": "integer"
+        },
+        "user_limit": {
+          "description": "",
+          "type": "integer"
+        },
+        "rate_limit_per_user": {
+          "description": "",
+          "type": "integer"
+        },
+        "icon": {
+          "description": "",
+          "type": "string"
+        },
+        "owner_id": {
+          "description": "",
+          "type": "string"
+        },
+        "application_id": {
+          "description": "",
+          "type": "string"
+        },
+        "managed": {
+          "description": "",
+          "type": "boolean"
+        },
+        "parent_id": {
+          "description": "",
+          "type": "string"
+        },
+        "last_pin_timestamp": {
+          "description": "",
+          "type": "string"
+        },
+        "rtc_region": {
+          "description": "",
+          "type": "string"
+        },
+        "video_quality_mode": {
+          "description": "",
+          "type": "integer"
+        },
+        "message_count": {
+          "description": "",
+          "type": "integer"
+        },
+        "member_count": {
+          "description": "",
+          "type": "integer"
+        },
+        "default_auto_archive_duration": {
+          "description": "",
+          "type": "integer"
+        },
+        "permissions": {
+          "description": "",
+          "type": "string"
+        },
+        "flags": {
+          "description": "",
+          "type": "integer"
+        },
+        "total_message_sent": {
+          "description": "",
+          "type": "integer"
+        },
+        "default_sort_order": {
+          "description": "",
+          "type": "integer"
+        },
+        "default_forum_layout": {
+          "description": "",
+          "type": "integer"
+        }
+      }
+    },
+    "Channel_Invite": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "max_age": {
+          "description": "",
+          "type": "integer"
+        },
+        "max_uses": {
+          "description": "",
+          "type": "integer"
+        },
+        "temporary": {
+          "description": "",
+          "type": "boolean"
+        },
+        "unique": {
+          "description": "",
+          "type": "boolean"
+        },
+        "target_type": {
+          "description": "",
+          "type": "integer"
+        },
+        "target_user_id": {
+          "description": "",
+          "type": "string"
+        },
+        "target_application_id": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Channel_Update": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "name": {
+          "description": "1-100 character channel name",
+          "type": "string"
+        },
+        "icon": {
+          "description": "base64 encoded icon",
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "code": {
+          "description": "",
+          "type": "integer"
+        },
+        "message": {
+          "description": "",
+          "type": "string"
+        },
+        "errors": {
+          "description": "",
+          "type": "any"
+        }
+      }
+    },
+    "Message": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "content": {
+          "description": "Message contents (up to 2000 characters)",
+          "type": "string"
+        },
+        "nonce": {
+          "description": "Can be used to verify a message was sent (up to 25 characters)",
+          "type": "string"
+        },
+        "tts": {
+          "description": "true if this is a TTS message",
+          "type": "boolean"
+        },
+        "embeds": {
+          "description": "Up to 10 rich embeds (up to 6000 characters)",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Message_Embed"
+          }
+        },
+        "allowed_mentions": {
+          "description": "",
+          "type": "reference",
+          "target": "Message_Allowed_Mentions"
+        },
+        "message_reference": {
+          "description": "",
+          "type": "string"
+        },
+        "flags": {
+          "description": "",
+          "type": "integer"
+        },
+        "enforce_nonce": {
+          "description": "",
+          "type": "boolean"
+        }
+      }
+    },
+    "Message_Allowed_Mentions": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "parse": {
+          "description": "An array of allowed mention types to parse from the content",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "description": "Array of role_ids to mention (Max size of 100)",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "users": {
+          "description": "Array of user_ids to mention (Max size of 100)",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "replied_user": {
+          "description": "For replies, whether to mention the author of the message being replied to (default false)",
+          "type": "boolean"
+        }
+      }
+    },
+    "Message_Embed": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "title": {
+          "description": "Title of embed",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of embed (always rich for webhook embeds)",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of embed",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of embed",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Timestamp of embed content",
+          "type": "string"
+        },
+        "color": {
+          "description": "Color code of the embed",
+          "type": "integer"
+        }
+      }
+    },
+    "Message_Reference": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "message_id": {
+          "description": "Id of the originating message",
+          "type": "string"
+        },
+        "channel_id": {
+          "description": "Id of the originating message's channel",
+          "type": "string"
+        },
+        "guild_id": {
+          "description": "Id of the originating message's guild",
+          "type": "string"
+        },
+        "fail_if_not_exists": {
+          "description": "When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true",
+          "type": "boolean"
+        }
+      }
+    },
+    "User": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "username": {
+          "description": "",
+          "type": "string"
+        },
+        "discriminator": {
+          "description": "",
+          "type": "string"
+        },
+        "global_name": {
+          "description": "",
+          "type": "string"
+        },
+        "avatar": {
+          "description": "",
+          "type": "string"
+        },
+        "bot": {
+          "description": "",
+          "type": "boolean"
+        },
+        "system": {
+          "description": "",
+          "type": "boolean"
+        },
+        "mfa_enabled": {
+          "description": "",
+          "type": "boolean"
+        },
+        "banner": {
+          "description": "",
+          "type": "string"
+        },
+        "accent_color": {
+          "description": "",
+          "type": "integer"
+        },
+        "locale": {
+          "description": "",
+          "type": "string"
+        },
+        "verified": {
+          "description": "",
+          "type": "boolean"
+        },
+        "email": {
+          "description": "",
+          "type": "string"
+        },
+        "flags": {
+          "description": "",
+          "type": "integer"
+        },
+        "premium_type": {
+          "description": "",
+          "type": "integer"
+        },
+        "public_flags": {
+          "description": "",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

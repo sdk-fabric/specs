@@ -1,0 +1,1491 @@
+{
+  "baseUrl": "https://api.twitter.com",
+  "security": {
+    "type": "httpBearer"
+  },
+  "operations": {
+    "tweet.getAll": {
+      "path": "/2/tweets",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "ids": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns a variety of information about the Tweet specified by the requested ID or list of IDs.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "tweet.get": {
+      "path": "/2/tweets/:tweet_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Entity"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns a variety of information about a single Tweet specified by the requested ID.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "tweet.create": {
+      "path": "/2/tweets",
+      "method": "POST",
+      "return": {
+        "code": 201,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Create_Response"
+        }
+      },
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Tweet"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Creates a Tweet on behalf of an authenticated user.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "tweet.delete": {
+      "path": "/2/tweets/:tweet_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Delete_Response"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Allows a user or authenticated user ID to delete a Tweet.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "tweet.hideReply": {
+      "path": "/2/tweets/:tweet_id/hidden",
+      "method": "PUT",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "HideReply_Response"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "HideReply"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Hides or unhides a reply to a Tweet.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "tweet.getLikingUsers": {
+      "path": "/2/tweets/:tweet_id/liking_users",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User_Collection"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "max_results": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "pagination_token": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Allows you to get information about a Tweet\u2019s liking users.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "usage.getTweets": {
+      "path": "/2/usage/tweets",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Usage_Response"
+        }
+      },
+      "arguments": [],
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "The Usage API in the Twitter API v2 allows developers to programmatically retrieve their project usage. Using thie endpoint, developers can keep a track and monitor of the number of Tweets they have pulled for a given billing cycle.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getAll": {
+      "path": "/2/users",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User_Collection"
+        }
+      },
+      "arguments": {
+        "ids": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns a variety of information about one or more users specified by the requested IDs.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.get": {
+      "path": "/2/users/:user_id",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns a variety of information about a single user specified by the requested ID.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getTimeline": {
+      "path": "/2/users/:user_id/timelines/reverse_chronological",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "pagination": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Pagination"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Allows you to retrieve a collection of the most recent Tweets and Retweets posted by you and users you follow. This endpoint can return every Tweet created on a timeline over the last 7 days as well as the most recent 800 regardless of creation date.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getLikedTweets": {
+      "path": "/2/users/:user_id/liked_tweets",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "max_results": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "pagination_token": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Tweets liked by a user",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.removeLike": {
+      "path": "/2/users/:user_id/likes/:tweet_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Like_Response"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Allows a user or authenticated user ID to unlike a Tweet.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.createLike": {
+      "path": "/2/users/:user_id/likes",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Like_Response"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Single_Tweet"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Causes the user ID identified in the path parameter to Like the target Tweet.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.findByName": {
+      "path": "/2/users/by",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User_Collection"
+        }
+      },
+      "arguments": {
+        "usernames": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns a variety of information about one or more users specified by their usernames.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "user.getMe": {
+      "path": "/2/users/me",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "User"
+        }
+      },
+      "arguments": {
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns information about an authorized user.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "bookmark.getAll": {
+      "path": "/2/users/:user_id/bookmarks",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "pagination_token": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Allows you to get an authenticated user's 800 most recent bookmarked Tweets.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "bookmark.create": {
+      "path": "/2/users/:user_id/bookmarks",
+      "method": "POST",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Bookmark_Response"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "in": "body",
+          "schema": {
+            "type": "reference",
+            "target": "Single_Tweet"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "bookmark.delete": {
+      "path": "/2/users/:user_id/bookmarks/:tweet_id",
+      "method": "DELETE",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Bookmark_Response"
+        }
+      },
+      "arguments": {
+        "user_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "search.getRecent": {
+      "path": "/2/tweets/search/recent",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "query": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "sort_order": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "pagination": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Pagination"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "quote.getAll": {
+      "path": "/2/tweets/:tweet_id/quote_tweets",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "max_results": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "pagination_token": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns Quote Tweets for a Tweet specified by the requested Tweet ID.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "trends.getByWoeid": {
+      "path": "/2/trends/by/woeid/:woeid",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Trend_Collection"
+        }
+      },
+      "arguments": {
+        "woeid": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "The Trends lookup endpoint allow developers to get the Trends for a location, specified using the where-on-earth id (WOEID).",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    },
+    "retweet.getAll": {
+      "path": "/2/tweets/:tweet_id/retweets",
+      "method": "GET",
+      "return": {
+        "code": 200,
+        "schema": {
+          "type": "reference",
+          "target": "Tweet_Collection"
+        }
+      },
+      "arguments": {
+        "tweet_id": {
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "expansions": {
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "max_results": {
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "fields": {
+          "in": "query",
+          "schema": {
+            "type": "reference",
+            "target": "Fields"
+          }
+        }
+      },
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "type": "reference",
+            "target": "Errors"
+          }
+        }
+      ],
+      "description": "Returns the Retweets for a given Tweet ID.",
+      "stability": 1,
+      "security": [],
+      "authorization": true,
+      "tags": []
+    }
+  },
+  "definitions": {
+    "Bookmark": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "bookmarked": {
+          "description": "Indicates whether the user bookmarks the specified Tweet as a result of this request.",
+          "type": "boolean"
+        }
+      }
+    },
+    "Bookmark_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Bookmark"
+        }
+      }
+    },
+    "Error": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "type": {
+          "description": "",
+          "type": "string"
+        },
+        "title": {
+          "description": "",
+          "type": "string"
+        },
+        "status": {
+          "description": "",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Errors": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "errors": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Error"
+          }
+        }
+      }
+    },
+    "Fields": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "media.fields": {
+          "description": "",
+          "type": "string"
+        },
+        "place.fields": {
+          "description": "",
+          "type": "string"
+        },
+        "poll.fields": {
+          "description": "",
+          "type": "string"
+        },
+        "tweet.fields": {
+          "description": "",
+          "type": "string"
+        },
+        "user.fields": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "HideReply": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "hidden": {
+          "description": "",
+          "type": "boolean"
+        }
+      }
+    },
+    "HideReply_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "HideReply"
+        }
+      }
+    },
+    "Like": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "liked": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Like_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Like"
+        }
+      }
+    },
+    "Pagination": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "start_time": {
+          "description": "",
+          "type": "string"
+        },
+        "end_time": {
+          "description": "",
+          "type": "string"
+        },
+        "since_id": {
+          "description": "",
+          "type": "string"
+        },
+        "until_id": {
+          "description": "",
+          "type": "string"
+        },
+        "max_results": {
+          "description": "",
+          "type": "integer"
+        },
+        "pagination_token": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Single_Tweet": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "tweet_id": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Trend": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "trend_name": {
+          "description": "",
+          "type": "string"
+        },
+        "tweet_count": {
+          "description": "",
+          "type": "integer"
+        }
+      }
+    },
+    "Trend_Collection": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Trend"
+          }
+        }
+      }
+    },
+    "Tweet": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "direct_message_deep_link": {
+          "description": "Tweets a link directly to a Direct Message conversation with an account.",
+          "type": "string"
+        },
+        "for_super_followers_only": {
+          "description": "Allows you to Tweet exclusively for Super Followers.",
+          "type": "boolean"
+        },
+        "geo": {
+          "description": "A JSON object that contains location information for a Tweet. You can only add a location to Tweets if you have geo enabled in your profile settings. If you don't have geo enabled, you can still add a location parameter in your request body, but it won't get attached to your Tweet",
+          "type": "reference",
+          "target": "Tweet_Geo"
+        },
+        "media": {
+          "description": "A JSON object that contains media information being attached to created Tweet. This is mutually exclusive from Quote Tweet ID and Poll.",
+          "type": "reference",
+          "target": "Tweet_Media"
+        },
+        "poll": {
+          "description": "A JSON object that contains options for a Tweet with a poll. This is mutually exclusive from Media and Quote Tweet ID.",
+          "type": "reference",
+          "target": "Tweet_Poll"
+        },
+        "quote_tweet_id": {
+          "description": "Link to the Tweet being quoted.",
+          "type": "string"
+        },
+        "reply": {
+          "description": "A JSON object that contains information of the Tweet being replied to.",
+          "type": "reference",
+          "target": "Tweet_Reply"
+        },
+        "reply_settings": {
+          "description": "Settings to indicate who can reply to the Tweet. Options include \"mentionedUsers\" and \"following\". If the field isn\u2019t specified, it will default to everyone.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text of the Tweet being created. This field is required if media.media_ids is not present.",
+          "type": "string"
+        },
+        "possibly_sensitive": {
+          "description": "Indicates if this Tweet contains URLs marked as sensitive, for example content suitable for mature audiences.",
+          "type": "boolean"
+        },
+        "lang": {
+          "description": "Language of the Tweet, if detected by Twitter. Returned as a BCP47 language tag.",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Collection": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Tweet_Details"
+          }
+        }
+      }
+    },
+    "Tweet_Create": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "text": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Create_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Tweet_Create"
+        }
+      }
+    },
+    "Tweet_Delete": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "deleted": {
+          "description": "",
+          "type": "boolean"
+        }
+      }
+    },
+    "Tweet_Delete_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Tweet_Delete"
+        }
+      }
+    },
+    "Tweet_Details": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.",
+          "type": "string"
+        },
+        "text": {
+          "description": "The content of the Tweet.",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "Creation time of the Tweet.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "author_id": {
+          "description": "Unique identifier of this user. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.",
+          "type": "string"
+        },
+        "edit_history_tweet_ids": {
+          "description": "Unique identifiers indicating all versions of an edited Tweet. For Tweets with no edits, there will be one ID. For Tweets with an edit history, there will be multiple IDs, arranged in ascending order reflecting the order of edit, with the most recent version in the last position of the array.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "conversation_id": {
+          "description": "The Tweet ID of the original Tweet of the conversation (which includes direct replies, replies of replies).",
+          "type": "string"
+        },
+        "in_reply_to_user_id": {
+          "description": "If this Tweet is a Reply, indicates the user ID of the parent Tweet's author. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Entity": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Tweet_Details"
+        }
+      }
+    },
+    "Tweet_Geo": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "place_id": {
+          "description": "Place ID being attached to the Tweet for geo location.",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Media": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "media_ids": {
+          "description": "A list of Media IDs being attached to the Tweet. This is only required if the request includes the tagged_user_ids.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "tagged_user_ids": {
+          "description": "A list of User IDs being tagged in the Tweet with Media. If the user you're tagging doesn't have photo-tagging enabled, their names won't show up in the list of tagged users even though the Tweet is successfully created.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Tweet_Poll": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "duration_minutes": {
+          "description": "Duration of the poll in minutes for a Tweet with a poll. This is only required if the request includes poll.options.",
+          "type": "integer"
+        },
+        "options": {
+          "description": "A list of poll options for a Tweet with a poll. For the request to be successful it must also include duration_minutes too.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Tweet_Reply": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "exclude_reply_user_ids": {
+          "description": "A list of User IDs to be excluded from the reply Tweet thus removing a user from a thread.",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "in_reply_to_tweet_id": {
+          "description": "Tweet ID of the Tweet being replied to. Please note that in_reply_to_tweet_id needs to be in the request if exclude_reply_user_ids is present.",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Usage": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "cap_reset_day": {
+          "description": "",
+          "type": "integer"
+        },
+        "project_cap": {
+          "description": "",
+          "type": "string"
+        },
+        "project_id": {
+          "description": "",
+          "type": "string"
+        },
+        "project_usage": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Tweet_Usage_Response": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "reference",
+          "target": "Tweet_Usage"
+        }
+      }
+    },
+    "User": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "created_at": {
+          "description": "",
+          "type": "string"
+        },
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "pinned_tweet_id": {
+          "description": "",
+          "type": "string"
+        },
+        "username": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "User_Collection": {
+      "description": "",
+      "type": "struct",
+      "properties": {
+        "data": {
+          "description": "",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "User"
+          }
+        }
+      }
+    }
+  }
+}
