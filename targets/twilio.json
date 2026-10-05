@@ -1,0 +1,674 @@
+{
+  "baseUrl": "https://api.twilio.com/2010-04-01",
+  "definitions": {
+    "Error": {
+      "description": "Error response returned by the Twilio REST API when a request fails.",
+      "properties": {
+        "code": {
+          "description": "A Twilio-specific error code to help you identify the problem (see https://www.twilio.com/docs/api/errors).",
+          "type": "integer"
+        },
+        "message": {
+          "description": "A detailed description of the exception.",
+          "type": "string"
+        },
+        "more_info": {
+          "description": "A URL to Twilio documentation for the error code.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The HTTP status code for the exception.",
+          "type": "integer"
+        }
+      },
+      "type": "struct"
+    },
+    "Media": {
+      "description": "A Media resource represents a media file (image, video, etc.) associated with a Message resource.",
+      "properties": {
+        "account_sid": {
+          "description": "The SID of the Account associated with this Media resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "content_type": {
+          "description": "The default MIME type of the media, for example `image/jpeg`, `image/png`, or `image/gif`.",
+          "nullable": true,
+          "type": "string"
+        },
+        "date_created": {
+          "description": "The date and time in GMT when this Media resource was created, specified in RFC 2822 format.",
+          "nullable": true,
+          "type": "string"
+        },
+        "date_updated": {
+          "description": "The date and time in GMT when this Media resource was last updated, specified in RFC 2822 format.",
+          "nullable": true,
+          "type": "string"
+        },
+        "parent_sid": {
+          "description": "The SID of the Message resource that is associated with this Media resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "sid": {
+          "description": "The unique string that identifies this Media resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "uri": {
+          "description": "The URI of this Media resource, relative to `https://api.twilio.com`.",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Media_Collection": {
+      "description": "A paginated list of Media resources.",
+      "properties": {
+        "end": {
+          "description": "The index of the last item on the current page.",
+          "type": "integer"
+        },
+        "first_page_uri": {
+          "description": "The URI of the first page of results, relative to `https://api.twilio.com`.",
+          "type": "string"
+        },
+        "media_list": {
+          "description": "The Media resources on this page.",
+          "schema": {
+            "target": "Media",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "next_page_uri": {
+          "description": "The URI of the next page of results, or null if there is no next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "page": {
+          "description": "The current page index.",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "The number of items per page.",
+          "type": "integer"
+        },
+        "previous_page_uri": {
+          "description": "The URI of the previous page of results, or null if there is no previous page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "start": {
+          "description": "The index of the first item on the current page.",
+          "type": "integer"
+        },
+        "uri": {
+          "description": "The URI of the current page, relative to `https://api.twilio.com`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Message": {
+      "description": "A Message resource represents an inbound or outbound message (SMS, MMS, WhatsApp or other channel).",
+      "properties": {
+        "account_sid": {
+          "description": "The SID of the Account associated with the Message resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "api_version": {
+          "description": "The API version used to process the Message.",
+          "nullable": true,
+          "type": "string"
+        },
+        "body": {
+          "description": "The text content of the message.",
+          "nullable": true,
+          "type": "string"
+        },
+        "date_created": {
+          "description": "The RFC 2822 timestamp (in GMT) of when the Message resource was created.",
+          "nullable": true,
+          "type": "string"
+        },
+        "date_sent": {
+          "description": "The RFC 2822 timestamp (in GMT) of when the Message was sent. For an outgoing message, this is when Twilio sent the message. For an incoming message, this is when Twilio sent the HTTP request to your incoming message webhook URL.",
+          "nullable": true,
+          "type": "string"
+        },
+        "date_updated": {
+          "description": "The RFC 2822 timestamp (in GMT) of when the Message resource was last updated.",
+          "nullable": true,
+          "type": "string"
+        },
+        "direction": {
+          "description": "The direction of the message. Can be: `inbound` for incoming messages, `outbound-api` for messages created by the REST API, `outbound-call` for messages created during a call, or `outbound-reply` for messages created in response to an incoming message.",
+          "nullable": true,
+          "type": "string"
+        },
+        "error_code": {
+          "description": "The error code returned if the Message `status` is `failed` or `undelivered`. If no error was encountered, the value is `null`.",
+          "nullable": true,
+          "type": "integer"
+        },
+        "error_message": {
+          "description": "The description of the `error_code` if the Message `status` is `failed` or `undelivered`. If no error was encountered, the value is `null`.",
+          "nullable": true,
+          "type": "string"
+        },
+        "from": {
+          "description": "The sender's phone number (in E.164 format), alphanumeric sender ID, Wireless SIM, short code, or channel address (e.g., `whatsapp:+15554449999`).",
+          "nullable": true,
+          "type": "string"
+        },
+        "messaging_service_sid": {
+          "description": "The SID of the Messaging Service associated with the Message resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "num_media": {
+          "description": "The number of media files associated with the Message resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "num_segments": {
+          "description": "The number of segments that make up the complete message. SMS message bodies that exceed the character limit are segmented and charged as multiple messages.",
+          "nullable": true,
+          "type": "string"
+        },
+        "price": {
+          "description": "The amount billed for the message in the currency specified by `price_unit`. Populated after the message has been sent/received.",
+          "nullable": true,
+          "type": "string"
+        },
+        "price_unit": {
+          "description": "The currency in which `price` is measured, in ISO 4127 format (e.g. `usd`, `eur`, `jpy`).",
+          "nullable": true,
+          "type": "string"
+        },
+        "sid": {
+          "description": "The unique, Twilio-provided string that identifies the Message resource.",
+          "nullable": true,
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the Message. Possible values: `accepted`, `scheduled`, `canceled`, `queued`, `sending`, `sent`, `failed`, `delivered`, `undelivered`, `receiving`, `received`, `read` (WhatsApp only) or `partially_delivered`.",
+          "nullable": true,
+          "type": "string"
+        },
+        "subresource_uris": {
+          "description": "A list of related resources identified by their URIs relative to `https://api.twilio.com`.",
+          "nullable": true,
+          "schema": {
+            "type": "string"
+          },
+          "type": "map"
+        },
+        "to": {
+          "description": "The recipient's phone number (in E.164 format) or channel address (e.g. `whatsapp:+15552229999`).",
+          "nullable": true,
+          "type": "string"
+        },
+        "uri": {
+          "description": "The URI of the Message resource, relative to `https://api.twilio.com`.",
+          "nullable": true,
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Message_Collection": {
+      "description": "A paginated list of Message resources.",
+      "properties": {
+        "end": {
+          "description": "The index of the last item on the current page.",
+          "type": "integer"
+        },
+        "first_page_uri": {
+          "description": "The URI of the first page of results, relative to `https://api.twilio.com`.",
+          "type": "string"
+        },
+        "messages": {
+          "description": "The Message resources on this page.",
+          "schema": {
+            "target": "Message",
+            "type": "reference"
+          },
+          "type": "array"
+        },
+        "next_page_uri": {
+          "description": "The URI of the next page of results, or null if there is no next page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "page": {
+          "description": "The current page index.",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "The number of items per page.",
+          "type": "integer"
+        },
+        "previous_page_uri": {
+          "description": "The URI of the previous page of results, or null if there is no previous page.",
+          "nullable": true,
+          "type": "string"
+        },
+        "start": {
+          "description": "The index of the first item on the current page.",
+          "type": "integer"
+        },
+        "uri": {
+          "description": "The URI of the current page, relative to `https://api.twilio.com`.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    }
+  },
+  "operations": {
+    "media.delete": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "messageSid": {
+          "description": "The SID of the Message resource that the Media belongs to.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "sid": {
+          "description": "The SID of the resource, including the `.json` suffix.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Delete the Media resource. Pass the Media SID with the `.json` suffix.",
+      "method": "DELETE",
+      "path": "/Accounts/:accountSid/Messages/:messageSid/Media/:sid",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "media.get": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "messageSid": {
+          "description": "The SID of the Message resource that the Media belongs to.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "sid": {
+          "description": "The SID of the resource, including the `.json` suffix.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Fetch a single Media resource associated with a specific Message resource. Pass the Media SID with the `.json` suffix, e.g. `MExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.json`.",
+      "method": "GET",
+      "path": "/Accounts/:accountSid/Messages/:messageSid/Media/:sid",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Media",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "media.getAll": {
+      "arguments": {
+        "DateCreated": {
+          "description": "Filter by date created, in YYYY-MM-DD format (GMT).",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "Page": {
+          "description": "The page index.",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "PageSize": {
+          "description": "How many resources to return in each list page.",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "PageToken": {
+          "description": "The page token provided by the API.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "messageSid": {
+          "description": "The SID of the Message resource that the Media belongs to.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Read a list of Media resources associated with a specific Message resource.",
+      "method": "GET",
+      "path": "/Accounts/:accountSid/Messages/:messageSid/Media.json",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Media_Collection",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "messages.create": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that will create the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "contentType": "application/x-www-form-urlencoded",
+          "in": "body"
+        }
+      },
+      "authorization": true,
+      "description": "Send a message (SMS, MMS, WhatsApp or other channel). Use `whatsapp:+E164` addresses in To/From for WhatsApp. Form fields (application/x-www-form-urlencoded): To (required, E.164 number or channel address e.g. `whatsapp:+15552229999`), From (Twilio sender: E.164 number, alphanumeric sender ID, short code or channel address e.g. `whatsapp:+15554449999`; may be omitted when MessagingServiceSid is set), MessagingServiceSid (MG..., required if From is omitted), Body (text up to 1,600 characters; one of Body, MediaUrl or ContentSid is required), MediaUrl (media URL, repeat up to 10 times), ContentSid (HX... Content Template SID, used for WhatsApp templates), ContentVariables (JSON string of template variable substitutions, requires ContentSid), StatusCallback (URL for status callback requests), ApplicationSid, ValidityPeriod (1-36000 seconds), ScheduleType (`fixed`, with SendAt and a Messaging Service), SendAt (ISO 8601 time to send), SendAsMms, ShortenUrls, SmartEncoded, PersistentAction (WhatsApp location actions), ProvideFeedback, Attempt, ContentRetention (`retain`/`discard`), AddressRetention (`retain`/`obfuscate`), RiskCheck (`enable`/`disable`), MessageIntent, FallbackFrom, TrafficType (`free`).",
+      "method": "POST",
+      "path": "/Accounts/:accountSid/Messages.json",
+      "return": {
+        "code": 201,
+        "schema": {
+          "target": "Message",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "messages.delete": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "sid": {
+          "description": "The SID of the resource, including the `.json` suffix.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Deletes a Message resource from your account. Pass the Message SID with the `.json` suffix.",
+      "method": "DELETE",
+      "path": "/Accounts/:accountSid/Messages/:sid",
+      "return": {
+        "code": 204,
+        "schema": {
+          "type": "any"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "messages.get": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "sid": {
+          "description": "The SID of the resource, including the `.json` suffix.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Fetch a specific Message. Pass the Message SID with the `.json` suffix, e.g. `SMxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.json`.",
+      "method": "GET",
+      "path": "/Accounts/:accountSid/Messages/:sid",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Message",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "messages.getAll": {
+      "arguments": {
+        "DateSent": {
+          "description": "Filter by date_sent, GMT, in YYYY-MM-DD format.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "From": {
+          "description": "Filter by sender.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "Page": {
+          "description": "The page index.",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "PageSize": {
+          "description": "How many resources to return in each list page. Default 50, maximum 1000.",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "PageToken": {
+          "description": "The page token provided by the API.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "To": {
+          "description": "Filter by recipient, e.g. `+15558881111` or `whatsapp:+15558881111`.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieve a list of Message resources associated with a Twilio Account.",
+      "method": "GET",
+      "path": "/Accounts/:accountSid/Messages.json",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Message_Collection",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "messages.update": {
+      "arguments": {
+        "accountSid": {
+          "description": "The SID of the Account that owns the resource.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "contentType": "application/x-www-form-urlencoded",
+          "in": "body"
+        },
+        "sid": {
+          "description": "The SID of the resource, including the `.json` suffix.",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Update a Message resource (used to redact Message `body` text and to cancel not-yet-sent messages). Pass the Message SID with the `.json` suffix. Form fields (application/x-www-form-urlencoded): Body (the new body; set to an empty string to redact the text content), Status (`canceled` to cancel a scheduled message).",
+      "method": "POST",
+      "path": "/Accounts/:accountSid/Messages/:sid",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Message",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    }
+  },
+  "security": {
+    "type": "httpBasic"
+  }
+}
