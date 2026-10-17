@@ -1,0 +1,945 @@
+{
+  "baseUrl": "https://slack.com/api",
+  "definitions": {
+    "Bot_Profile": {
+      "description": "Profile of the bot that posted a message.",
+      "properties": {
+        "app_id": {
+          "description": "ID of the Slack app the bot belongs to.",
+          "type": "string"
+        },
+        "deleted": {
+          "description": "Whether the bot has been deleted.",
+          "type": "boolean"
+        },
+        "icons": {
+          "description": "The bot's icon images.",
+          "target": "Bot_Profile_Icons",
+          "type": "reference"
+        },
+        "id": {
+          "description": "The bot ID (e.g. `B123ABC456`).",
+          "type": "string"
+        },
+        "name": {
+          "description": "Display name of the bot.",
+          "type": "string"
+        },
+        "team_id": {
+          "description": "ID of the workspace the bot belongs to.",
+          "type": "string"
+        },
+        "updated": {
+          "description": "Unix timestamp of the last profile update.",
+          "type": "integer"
+        },
+        "user_id": {
+          "description": "The bot's user ID.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Bot_Profile_Icons": {
+      "description": "Icon image URLs of a bot profile in different sizes.",
+      "properties": {
+        "image_36": {
+          "description": "URL of the 36x36 px icon.",
+          "type": "string"
+        },
+        "image_48": {
+          "description": "URL of the 48x48 px icon.",
+          "type": "string"
+        },
+        "image_72": {
+          "description": "URL of the 72x72 px icon.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Delete_Message_Request": {
+      "description": "Request body for chat.delete.",
+      "properties": {
+        "as_user": {
+          "description": "(Legacy) Pass true to delete the message as the authed user.",
+          "type": "boolean"
+        },
+        "channel": {
+          "description": "Required. Channel containing the message to be deleted.",
+          "type": "string"
+        },
+        "ts": {
+          "description": "Required. Timestamp of the message to be deleted.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Delete_Message_Response": {
+      "description": "Response of chat.delete.",
+      "properties": {
+        "channel": {
+          "description": "ID of the channel the message was deleted from.",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "ts": {
+          "description": "Timestamp of the deleted message.",
+          "type": "string"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Error": {
+      "description": "Slack Web API error response. Returned when `ok` is false (usually with HTTP 200) or with non-2xx status codes such as 429 rate limiting.",
+      "properties": {
+        "error": {
+          "description": "Machine-readable error code, e.g. `channel_not_found`, `not_in_channel`, `invalid_auth`, `missing_scope`, `ratelimited`, `invalid_blocks`, `no_text`, `msg_too_long`.",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Additional error details for some errors.",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "needed": {
+          "description": "For `missing_scope` errors, the OAuth scope(s) that are needed.",
+          "type": "string"
+        },
+        "ok": {
+          "description": "Always false for errors.",
+          "type": "boolean"
+        },
+        "provided": {
+          "description": "For `missing_scope` errors, the OAuth scopes the token has.",
+          "type": "string"
+        },
+        "response_metadata": {
+          "description": "Additional messages that explain the error.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "warning": {
+          "description": "Comma-separated warning codes, if any.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Get_Permalink_Response": {
+      "description": "Response of chat.getPermalink.",
+      "properties": {
+        "channel": {
+          "description": "ID of the channel containing the message.",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "permalink": {
+          "description": "HTTP permalink URL of the message.",
+          "type": "string"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Message": {
+      "description": "A Slack message object.",
+      "properties": {
+        "app_id": {
+          "description": "ID of the Slack app that posted the message.",
+          "type": "string"
+        },
+        "attachments": {
+          "description": "Legacy secondary attachments of the message.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "blocks": {
+          "description": "Block Kit layout blocks of the message.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "bot_id": {
+          "description": "ID of the bot that posted the message.",
+          "type": "string"
+        },
+        "bot_profile": {
+          "description": "Profile of the bot that posted the message.",
+          "target": "Bot_Profile",
+          "type": "reference"
+        },
+        "icons": {
+          "description": "Icon overrides of the message.",
+          "target": "Message_Icons",
+          "type": "reference"
+        },
+        "metadata": {
+          "description": "Structured metadata attached to the message.",
+          "target": "Message_Metadata",
+          "type": "reference"
+        },
+        "parent_user_id": {
+          "description": "User ID of the author of the thread's parent message.",
+          "type": "string"
+        },
+        "subtype": {
+          "description": "Message subtype, e.g. `bot_message`. Absent for plain user messages.",
+          "type": "string"
+        },
+        "team": {
+          "description": "ID of the workspace the message was posted in.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text of the message.",
+          "type": "string"
+        },
+        "thread_ts": {
+          "description": "Timestamp of the parent message if the message is part of a thread.",
+          "type": "string"
+        },
+        "ts": {
+          "description": "Timestamp of the message. Unique within the channel and used as the message ID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the object, usually `message` (or `delayed_message` for scheduled messages).",
+          "type": "string"
+        },
+        "user": {
+          "description": "ID of the user who posted the message.",
+          "type": "string"
+        },
+        "username": {
+          "description": "Custom username the message was posted with.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Message_Icons": {
+      "description": "Icon overrides used when a message was posted with a custom icon.",
+      "properties": {
+        "emoji": {
+          "description": "Emoji code used as the message icon (e.g. `:chart_with_upwards_trend:`).",
+          "type": "string"
+        },
+        "image_64": {
+          "description": "URL of the image used as the message icon.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Message_Metadata": {
+      "description": "Structured message metadata attached to a message, containing an event type and an event payload.",
+      "properties": {
+        "event_payload": {
+          "description": "A JSON object holding event-specific fields.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "map"
+        },
+        "event_type": {
+          "description": "A namespaced string that identifies the type of the metadata event.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Post_Ephemeral_Request": {
+      "description": "Request body for chat.postEphemeral. One of `text`, `blocks`, `attachments` or `markdown_text` is required.",
+      "properties": {
+        "as_user": {
+          "description": "(Legacy) Pass true to post the message as the authed user.",
+          "type": "boolean"
+        },
+        "attachments": {
+          "description": "A JSON-based array of structured (legacy) attachments.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "blocks": {
+          "description": "A JSON-based array of structured Block Kit blocks.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "channel": {
+          "description": "Required. Channel, private group, or IM channel to send the message to.",
+          "type": "string"
+        },
+        "icon_emoji": {
+          "description": "Emoji to use as the icon for this message.",
+          "type": "string"
+        },
+        "icon_url": {
+          "description": "URL to an image to use as the icon for this message.",
+          "type": "string"
+        },
+        "link_names": {
+          "description": "Find and link channel names and usernames.",
+          "type": "boolean"
+        },
+        "markdown_text": {
+          "description": "Message text formatted in markdown (max 12,000 characters).",
+          "type": "string"
+        },
+        "parse": {
+          "description": "Change how messages are treated (`none` or `full`).",
+          "type": "string"
+        },
+        "text": {
+          "description": "Message body, or fallback text when `blocks` are used.",
+          "type": "string"
+        },
+        "thread_ts": {
+          "description": "Provide another message's `ts` value to post this message in a thread.",
+          "type": "string"
+        },
+        "user": {
+          "description": "Required. ID of the user who will receive the ephemeral message. The user must be in the channel.",
+          "type": "string"
+        },
+        "username": {
+          "description": "Set your bot's user name.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Post_Ephemeral_Response": {
+      "description": "Response of chat.postEphemeral.",
+      "properties": {
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "message_ts": {
+          "description": "Timestamp of the ephemeral message.",
+          "type": "string"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Post_Message_Request": {
+      "description": "Request body for chat.postMessage. One of `text`, `blocks`, `attachments` or `markdown_text` is required.",
+      "properties": {
+        "as_user": {
+          "description": "(Legacy) Pass true to post the message as the authed user instead of as a bot.",
+          "type": "boolean"
+        },
+        "attachments": {
+          "description": "A JSON-based array of structured (legacy) attachments.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "blocks": {
+          "description": "A JSON-based array of structured Block Kit blocks.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "channel": {
+          "description": "Required. An encoded ID or channel name that represents a channel, private group, or IM channel to send the message to.",
+          "type": "string"
+        },
+        "icon_emoji": {
+          "description": "Emoji to use as the icon for this message. Overrides `icon_url`.",
+          "type": "string"
+        },
+        "icon_url": {
+          "description": "URL to an image to use as the icon for this message.",
+          "type": "string"
+        },
+        "link_names": {
+          "description": "Find and link user groups. No longer supports linking individual users; use the `\u003c@U123\u003e` syntax instead.",
+          "type": "boolean"
+        },
+        "markdown_text": {
+          "description": "Accepts message text formatted in markdown (max 12,000 characters). Cannot be used together with `blocks` or `text`.",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "JSON object with `event_type` and `event_payload` fields.",
+          "target": "Message_Metadata",
+          "type": "reference"
+        },
+        "mrkdwn": {
+          "description": "Disable Slack markup parsing by setting to false. Defaults to true.",
+          "type": "boolean"
+        },
+        "parse": {
+          "description": "Change how messages are treated (`none` or `full`).",
+          "type": "string"
+        },
+        "reply_broadcast": {
+          "description": "Used with `thread_ts`; indicates whether the reply should also be visible to everyone in the channel. Defaults to false.",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "How this field works depends on whether `blocks` are used: it is the message body, or the fallback text shown in notifications when blocks are given.",
+          "type": "string"
+        },
+        "thread_ts": {
+          "description": "Provide another message's `ts` value to make this message a reply. Avoid using a reply's `ts` value; use its parent instead.",
+          "type": "string"
+        },
+        "unfurl_links": {
+          "description": "Pass true to enable unfurling of primarily text-based content.",
+          "type": "boolean"
+        },
+        "unfurl_media": {
+          "description": "Pass false to disable unfurling of media content.",
+          "type": "boolean"
+        },
+        "username": {
+          "description": "Set your bot's user name.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Post_Message_Response": {
+      "description": "Response of chat.postMessage.",
+      "properties": {
+        "channel": {
+          "description": "ID of the channel the message was posted to.",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "message": {
+          "description": "The posted message.",
+          "target": "Message",
+          "type": "reference"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "ts": {
+          "description": "Timestamp ID of the posted message.",
+          "type": "string"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Response_Metadata": {
+      "description": "Additional metadata returned with a Web API response, such as warning/error detail messages and pagination cursors.",
+      "properties": {
+        "messages": {
+          "description": "Detailed messages explaining errors or warnings (e.g. invalid block details).",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "next_cursor": {
+          "description": "Cursor for the next page of results. An empty string means there are no more results.",
+          "type": "string"
+        },
+        "warnings": {
+          "description": "Machine-readable warning codes.",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "struct"
+    },
+    "Schedule_Message_Request": {
+      "description": "Request body for chat.scheduleMessage. One of `text`, `blocks`, `attachments` or `markdown_text` is required.",
+      "properties": {
+        "as_user": {
+          "description": "Pass true to post as the authed user instead of as a bot. Defaults to false.",
+          "type": "boolean"
+        },
+        "attachments": {
+          "description": "A JSON-based array of structured (legacy) attachments.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "blocks": {
+          "description": "A JSON-based array of structured Block Kit blocks.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "channel": {
+          "description": "Required. Channel, private group, or DM channel to send the message to.",
+          "type": "string"
+        },
+        "link_names": {
+          "description": "Find and link user groups.",
+          "type": "boolean"
+        },
+        "markdown_text": {
+          "description": "Message text formatted in markdown (max 12,000 characters).",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "JSON object with `event_type` and `event_payload` fields.",
+          "target": "Message_Metadata",
+          "type": "reference"
+        },
+        "parse": {
+          "description": "Change how messages are treated (`none` or `full`).",
+          "type": "string"
+        },
+        "post_at": {
+          "description": "Required. Unix timestamp of the future time the message should be posted (at most 120 days ahead).",
+          "type": "integer"
+        },
+        "reply_broadcast": {
+          "description": "Used with `thread_ts`; make the reply visible to everyone in the channel. Defaults to false.",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "Message body, or fallback text when `blocks` are used.",
+          "type": "string"
+        },
+        "thread_ts": {
+          "description": "Provide another message's `ts` value to make this message a reply.",
+          "type": "string"
+        },
+        "unfurl_links": {
+          "description": "Pass true to enable unfurling of primarily text-based content.",
+          "type": "boolean"
+        },
+        "unfurl_media": {
+          "description": "Pass false to disable unfurling of media content.",
+          "type": "boolean"
+        }
+      },
+      "type": "struct"
+    },
+    "Schedule_Message_Response": {
+      "description": "Response of chat.scheduleMessage.",
+      "properties": {
+        "channel": {
+          "description": "ID of the channel the message is scheduled for.",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "message": {
+          "description": "The scheduled message.",
+          "target": "Message",
+          "type": "reference"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "post_at": {
+          "description": "Unix timestamp of when the message will be posted.",
+          "type": "integer"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "scheduled_message_id": {
+          "description": "ID of the scheduled message (e.g. `Q1298393284`), used to delete or list it.",
+          "type": "string"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Message_Request": {
+      "description": "Request body for chat.update.",
+      "properties": {
+        "as_user": {
+          "description": "(Legacy) Pass true to update the message as the authed user.",
+          "type": "boolean"
+        },
+        "attachments": {
+          "description": "A JSON-based array of structured (legacy) attachments.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "blocks": {
+          "description": "A JSON-based array of structured Block Kit blocks. Pass an empty array to clear existing blocks.",
+          "schema": {
+            "type": "any"
+          },
+          "type": "array"
+        },
+        "channel": {
+          "description": "Required. Channel containing the message to be updated.",
+          "type": "string"
+        },
+        "file_ids": {
+          "description": "Array of new file IDs that will be sent with this message.",
+          "schema": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "link_names": {
+          "description": "Find and link channel names and usernames.",
+          "type": "boolean"
+        },
+        "markdown_text": {
+          "description": "Accepts message text formatted in markdown (max 12,000 characters).",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "JSON object with `event_type` and `event_payload` fields.",
+          "target": "Message_Metadata",
+          "type": "reference"
+        },
+        "parse": {
+          "description": "Change how messages are treated (`none` or `full`).",
+          "type": "string"
+        },
+        "reply_broadcast": {
+          "description": "Broadcast an existing thread reply to make it visible to everyone in the channel.",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "New message body, or fallback text when `blocks` are used.",
+          "type": "string"
+        },
+        "ts": {
+          "description": "Required. Timestamp of the message to be updated.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    },
+    "Update_Message_Response": {
+      "description": "Response of chat.update.",
+      "properties": {
+        "channel": {
+          "description": "ID of the channel containing the updated message.",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error code if `ok` is false.",
+          "type": "string"
+        },
+        "message": {
+          "description": "The updated message.",
+          "target": "Message",
+          "type": "reference"
+        },
+        "ok": {
+          "description": "Whether the request was successful.",
+          "type": "boolean"
+        },
+        "response_metadata": {
+          "description": "Additional warning or error messages.",
+          "target": "Response_Metadata",
+          "type": "reference"
+        },
+        "text": {
+          "description": "Updated text of the message.",
+          "type": "string"
+        },
+        "ts": {
+          "description": "Timestamp of the updated message.",
+          "type": "string"
+        },
+        "warning": {
+          "description": "Warning code(s) if the request succeeded with warnings.",
+          "type": "string"
+        }
+      },
+      "type": "struct"
+    }
+  },
+  "operations": {
+    "chat.delete": {
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Delete_Message_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Deletes a message from a channel. Requires `chat:write`.",
+      "method": "POST",
+      "path": "/chat.delete",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Delete_Message_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "chat.getPermalink": {
+      "arguments": {
+        "channel": {
+          "description": "The ID of the conversation or channel containing the message.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "message_ts": {
+          "description": "A message's `ts` value, uniquely identifying it within a channel.",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Retrieves a permalink URL for a specific existing message.",
+      "method": "GET",
+      "path": "/chat.getPermalink",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Get_Permalink_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "chat.postEphemeral": {
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Post_Ephemeral_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Sends an ephemeral message to a user in a channel. Only the given user sees it, and it is not persisted. Requires `chat:write`.",
+      "method": "POST",
+      "path": "/chat.postEphemeral",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Post_Ephemeral_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "chat.postMessage": {
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Post_Message_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Sends a message to a channel. Requires the `chat:write` scope. The bot must be a member of the channel unless it has `chat:write.public`. Rate limit: generally 1 message per second per channel.",
+      "method": "POST",
+      "path": "/chat.postMessage",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Post_Message_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "chat.scheduleMessage": {
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Schedule_Message_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Schedules a message to be sent to a channel at a future time. Requires `chat:write`.",
+      "method": "POST",
+      "path": "/chat.scheduleMessage",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Schedule_Message_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    },
+    "chat.update": {
+      "arguments": {
+        "payload": {
+          "in": "body",
+          "schema": {
+            "target": "Update_Message_Request",
+            "type": "reference"
+          }
+        }
+      },
+      "authorization": true,
+      "description": "Updates a message in a channel. Requires `chat:write`.",
+      "method": "POST",
+      "path": "/chat.update",
+      "return": {
+        "code": 200,
+        "schema": {
+          "target": "Update_Message_Response",
+          "type": "reference"
+        }
+      },
+      "security": [],
+      "stability": 1,
+      "throws": [
+        {
+          "code": 999,
+          "schema": {
+            "target": "Error",
+            "type": "reference"
+          }
+        }
+      ]
+    }
+  },
+  "security": {
+    "type": "httpBearer"
+  }
+}
